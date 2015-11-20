@@ -32,6 +32,13 @@ namespace DocumentFlow.Controllers
                 return HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
         }
+        private IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().Authentication;
+            }
+        }
 
         public ActionResult Register()
         {
@@ -60,7 +67,7 @@ namespace DocumentFlow.Controllers
                     FullName = user.FirstName + " " + user.LastName;
                     UserId = user.Id;
 
-                    //await UserManager.AddToRoleAsync(UserId, "User");
+                    await UserManager.AddToRoleAsync(UserId, "User");
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -72,14 +79,6 @@ namespace DocumentFlow.Controllers
                 }
             }
             return View(model);
-        }
-
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
         }
 
         public ActionResult Login(string returnUrl)
@@ -201,8 +200,40 @@ namespace DocumentFlow.Controllers
         }
 
         [HttpGet]
+        public ActionResult EditPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditPassword(EditPasswordModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+            if (result.Succeeded)
+            {
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                if (user != null)
+                {
+                    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie, DefaultAuthenticationTypes.TwoFactorCookie);
+                    return RedirectToAction("Login", "Account");
+                }
+                return RedirectToAction("Index", "Main");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Неверный пароль");
+            }
+            return View(model);
+        }
+
+        [HttpGet]
         public ActionResult LogOff()
         {
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie, DefaultAuthenticationTypes.TwoFactorCookie);
             UserId = null;
             FullName = null;
             return RedirectToAction("Index", "Home");

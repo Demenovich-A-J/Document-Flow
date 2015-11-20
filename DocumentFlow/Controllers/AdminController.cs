@@ -20,9 +20,7 @@ namespace DocumentFlow.Controllers
         {
             get
             {
-               
                 return HttpContext.GetOwinContext().GetUserManager<ApplicationRoleManager>();
-                
             }
         }
 
