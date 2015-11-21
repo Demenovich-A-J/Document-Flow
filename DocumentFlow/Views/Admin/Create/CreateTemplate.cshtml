@@ -1,6 +1,8 @@
 ﻿@model DocumentFlow.Models.DocumentTemplate
+
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var positions = ViewBag.Positions;
 }
 
 <div class="main-block">
@@ -9,23 +11,29 @@
         <div class="header">
             <h1>Добавление документа</h1>
         </div>
-        <div class="pass-edit">
-            <div class="pass"></div>
+        <div class="way-edit">
             <div class="selection">
-                <select>
-                    <option></option>
-                    <option></option>
-                    <option></option>
-                    <option></option>
+                <select id="positionsOP">
+                    @{
+                        foreach (var position in positions)
+                        {
+                            <option>@position.Name</option>
+                        }
+                    }
                 </select>
-                <a href="#" onclick="console.log('click')">Click</a>
+                <a class="button" href="#" onclick="addPosition()">Add</a>
+            </div>
+            <div id="way" class="way-show">
+                <span style="width: 30px; font-weight: 600;">№</span>
+                <span style=" font-weight: 600;">Должность</span>
+                <span style=" font-weight: 600;">Действие</span>
             </div>
         </div>
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
 
-            @Html.EditorFor(model => model.Text, new { htmlAttributes = new { @id = "edit", autofocus = "" } })
+            @Html.EditorFor(model => model.Text, new {htmlAttributes = new {@id = "edit", autofocus = ""}})
 
             <input class="button" name="submit" type="submit" value="Добавить">
 
@@ -64,7 +72,7 @@
 
             <!-- Initialize the editor. -->
             <script>
-                $(function () {
+                $(function() {
                     $.FroalaEditor.DefineIcon('my_dropdown', { NAME: 'cog' });
                     $.FroalaEditor.RegisterCommand('my_dropdown', {
                         title: 'Advanced options',
@@ -73,29 +81,102 @@
                         undo: false,
                         refreshAfterCallback: true,
                         options: {
-                            '#director': 'Director',
-                            '#Buhgalter': 'Buhgalter'
+                            @{
+                                foreach (var position in positions)
+                                {
+                                    @Html.Raw("\'#" + @position.Name + "\'" + ":" + "\'" + @position.Name + "\',\n")
+                                }
+                            }
+
+                        
+                        
                         },
-                        callback: function (cmd, val) {
+                        callback: function(cmd, val) {
                             this.html.insert(val);
                         }
                     });
 
                     $('#edit').froalaEditor({
                         // Add the custom buttons in the toolbarButtons list, after the separator.
-
-                        toolbarButtons: ['fullscreen', 'bold', 'italic',
-                            'underline', 'strikeThrough', 'subscript',
-                            'superscript', 'fontFamily', 'fontSize',
-                            '|', 'color', 'emoticons', 'inlineStyle',
-                            'paragraphStyle', '|', 'paragraphFormat',
-                            'align', 'formatOL', 'formatUL', 'outdent',
-                            'indent', 'quote', 'insertHR', '-', 'insertLink',
-                            'insertImage', 'insertVideo', 'insertFile',
+                        tabSpaces: 5,
+                        disableRightClick: true,
+                        inlineMode: false,
+                        theme: 'gray',
+                        language: 'ru',
+                        toolbarButtons: [
+                            'fullscreen', 'bold', 'italic',
+                            'underline', 'strikeThrough', 'fontFamily', 'fontSize',
+                            '|', 'color', 'paragraphStyle', '|', 'paragraphFormat',
+                            'align', 'formatOL', 'formatUL', '-', 'insertLink',
                             'insertTable', 'undo', 'redo', 'clearFormatting',
-                            'selectAll', 'html', "|", 'formatBlock', 'my_dropdown']
+                            'selectAll', 'html', "|", 'formatBlock', 'my_dropdown'
+                        ],
+                        toolbarButtonsMD: [
+                            'fullscreen', 'bold', 'italic',
+                            'underline', 'strikeThrough', 'fontFamily', 'fontSize',
+                            '|', 'color', 'paragraphStyle', '|', 'paragraphFormat',
+                            'align', 'formatOL', 'formatUL', '-', 'insertLink',
+                            'insertTable', 'undo', 'redo', 'clearFormatting',
+                            'selectAll', 'html', "|", 'formatBlock', 'my_dropdown'
+                        ],
+                        toolbarButtonsSM: [
+                            'my_dropdown', 'fullscreen', 'bold', 'italic',
+                            'underline', 'strikeThrough', 'fontFamily', 'fontSize',
+                            '|', 'color', 'paragraphStyle', '|', 'paragraphFormat',
+                            'align', 'formatOL', 'formatUL', '-', 'insertLink',
+                            'insertTable', 'undo', 'redo', 'clearFormatting',
+                            'selectAll', 'html', "|", 'formatBlock', 'my_dropdown'
+                        ]
+
                     });
                 });
+
+                var positions = {}
+                var i = 0;
+
+                function addPosition() {
+                    var e = document.getElementById("positionsOP");
+                    var strUser = e.options[e.selectedIndex].text;
+
+                    if (positions[strUser] != null) {
+                        alert(strUser + " is alredy in qery!!!");
+                        return;
+                    }
+
+                    i++;
+                    positions[strUser] = i;
+
+                    console.log(positions);
+
+                    var d = document.getElementById("way");
+
+                    d.innerHTML += "<div class='new-position'>" + "<span style='width: 30px;'>" + i + "</span><span>" + strUser + "</span><span><a href='#' onclick='removePosition(\"" + strUser + "\")'>Удалить</a></span></div>";
+
+                };
+
+                function removePosition(name) {
+                    var d = 1;
+                    var newPositions = {}
+                    var res = "";
+                    for (var key in positions) {
+                        if (positions.hasOwnProperty(key) && key !== name) {
+                            res += "<div class='new-position'>" + "<span style='width: 30px;'>" + d + "</span><span>" + key + "</span><span><a href='#' onclick='removePosition(\"" + key + "\")'>Удалить</a></span></div>";
+                            newPositions[key] = d;
+                            d++;
+                        }
+                    }
+
+                    var g = document.getElementById("way");
+
+                    if (d !== 1) {
+                        g.innerHTML = "<span style='width: 30px; font-weight: 600;'>№</span><span style=' font-weight: 600;'>Должность</span><span style=' font-weight: 600;'>Действие</span>" + res;
+                    } else {
+                        g.innerHTML = "<span style='width: 30px; font-weight: 600;'>№</span><span style=' font-weight: 600;'>Должность</span><span style=' font-weight: 600;'>Действие</span>";
+                    }
+                    i = d - 1;
+                    positions = newPositions;
+                };
+
             </script>
         }
     </div>

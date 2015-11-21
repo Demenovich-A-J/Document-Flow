@@ -202,7 +202,7 @@ namespace DocumentFlow.Controllers
         [HttpGet]
         public ActionResult EditPassword()
         {
-            return View();
+            return View("Edit");
         }
 
         [HttpPost]

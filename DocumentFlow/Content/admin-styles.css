@@ -183,7 +183,6 @@ nav a:hover{
 .main-blcok-wrapper
 {
 	width: 98%;
-	height: 100%;
 	margin: 0 auto;
 }
 
@@ -521,3 +520,30 @@ textarea:focus{
 .add-new-entry:hover{
 	background: url('/Content/images/Add_button_inside_black_circle_64_hover.png') no-repeat center center;
 }
+
+
+.way-edit {
+    width: 99%;
+    padding: 20px 0px 20px 10px;
+    margin-bottom: 20px;
+    border: 1px solid #000;
+    -ms-border-radius: 5px;
+    border-radius: 5px;
+}
+.way-show {
+    width: 40%;   
+}
+
+.way-show span{
+    display: inline-block;
+    padding: 5px 10px 5px 10px;
+    border-bottom: 1px solid #454545;
+    width: 30%;
+}
+
+.way-edit .button {
+    margin: 0;
+    float: none;
+    padding: 2px 18px;
+}
+

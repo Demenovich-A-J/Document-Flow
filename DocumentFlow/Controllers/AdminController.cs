@@ -42,10 +42,6 @@ namespace DocumentFlow.Controllers
         {
             return View("Edit/EditTemplate");
         }
-        public ActionResult CreateTemplate()
-        {
-            return View("Create/CreateTemplate", new DocumentTemplate());
-        }
         public ActionResult Users()
         {
             return View("Index/Users", UserManager.Users.ToList());
@@ -203,12 +199,15 @@ namespace DocumentFlow.Controllers
         public ActionResult CreateTemplate()
         {
             IEnumerable<Position> positions;
-            using(ApplicationContext context = new ApplicationContext())
+            using (ApplicationContext context = new ApplicationContext())
             {
-                positions = context.Positions.AsEnumerable();
+                positions = new List<Position>(context.Positions.ToList());
             }
 
-            return View(positions);
+            ViewBag.Positions = positions;
+
+            return View("Create/CreateTemplate", new DocumentTemplate());
+
         }
     }
 }
