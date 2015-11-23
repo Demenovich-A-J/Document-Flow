@@ -82,7 +82,7 @@
                         refreshAfterCallback: true,
                         options: {
                             @{
-                                foreach (var position in positions)
+            foreach (var position in positions)
                                 {
                                     @Html.Raw("\'#" + @position.Name + "\'" + ":" + "\'" + @position.Name + "\',\n")
                                 }

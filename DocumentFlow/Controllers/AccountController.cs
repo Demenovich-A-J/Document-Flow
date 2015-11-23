@@ -16,7 +16,7 @@ namespace DocumentFlow.Controllers
     public class AccountController : Controller
     {
         public static string FullName;
-        private static string UserId;
+        private static string _userId;
 
         private ApplicationRoleManager RoleManager
         {
@@ -72,9 +72,9 @@ namespace DocumentFlow.Controllers
                 if (result.Succeeded)
                 {
                     FullName = user.FirstName + " " + user.LastName;
-                    UserId = user.Id;
+                    _userId = user.Id;
 
-                    await UserManager.AddToRoleAsync(UserId, "User");
+                    await UserManager.AddToRoleAsync(_userId, "User");
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -124,10 +124,10 @@ namespace DocumentFlow.Controllers
                     }, claim);
                     if (String.IsNullOrEmpty(returnUrl))
                     {
-                        UserId = user.Id;
+                        _userId = user.Id;
                         FullName = user.FirstName + " " + user.LastName;
 
-                        if (UserManager.IsInRole(UserId, "Admin"))
+                        if (UserManager.IsInRole(_userId, "Admin"))
                         {
                             return RedirectToAction("Roles", "Admin");
                         }
@@ -150,7 +150,7 @@ namespace DocumentFlow.Controllers
         [HttpGet]
         public async Task<ActionResult> DeleteConfirmed()
         {
-            ApplicationUser user = await UserManager.FindByIdAsync(UserId);
+            ApplicationUser user = await UserManager.FindByIdAsync(_userId);
             if (user != null)
             {
                 IdentityResult result = await UserManager.DeleteAsync(user);
@@ -166,7 +166,7 @@ namespace DocumentFlow.Controllers
         [HttpGet]
         public async Task<ActionResult> Edit()
         {
-            ApplicationUser user = await UserManager.FindByIdAsync(UserId);
+            ApplicationUser user = await UserManager.FindByIdAsync(_userId);
             if (user != null)
             {
                 EditModel model = new EditModel
@@ -186,7 +186,7 @@ namespace DocumentFlow.Controllers
         [HttpPost]
         public async Task<ActionResult> Edit(EditModel model)
         {
-            ApplicationUser user = await UserManager.FindByIdAsync(UserId);
+            ApplicationUser user = await UserManager.FindByIdAsync(_userId);
             if (user != null)
             {
                 user.Email = model.Email;
@@ -249,7 +249,7 @@ namespace DocumentFlow.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie, DefaultAuthenticationTypes.TwoFactorCookie);
-            UserId = null;
+            _userId = null;
             FullName = null;
             return RedirectToAction("Index", "Home");
         }
