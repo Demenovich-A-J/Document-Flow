@@ -13,7 +13,7 @@ namespace DocumentFlow.Controllers
     {
 
         [HttpGet]
-        public ActionResult Convert(DocumentTemplate template)
+        public ActionResult ConvertView(DocumentTemplate template)
         {
             template.Text = ReplaceBy(template.Text, BuildDictionary());
             return View(template);

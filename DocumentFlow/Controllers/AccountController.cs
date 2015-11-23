@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.Owin.Security;
 using System.Net.Mail;
-using WebGrease.Css.Extensions;
 
 namespace DocumentFlow.Controllers
 {
@@ -43,6 +42,13 @@ namespace DocumentFlow.Controllers
 
         public ActionResult Register()
         {
+            IEnumerable<Position> positions;
+            using(ApplicationContext context = new ApplicationContext())
+            {
+                positions = new List<Position>(context.Positions);
+            }
+
+            ViewBag.Positions = positions.Select(x => new SelectListItem() { Text = x.Name, Value = x.Id });
             return View();
         }
 
@@ -58,7 +64,7 @@ namespace DocumentFlow.Controllers
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         Patronymic = model.Patronymic,
-                        Position = model.Position,
+                        PositionId = model.PositionId,
                         Email = model.Email
                     };
 
@@ -170,7 +176,7 @@ namespace DocumentFlow.Controllers
                     LastName = user.LastName,
                     Patronymic = user.Patronymic,
                     Email = user.Email,
-                    Position = user.Position
+                    PositionId = user.PositionId
                 };
                 return View(model);
             }
@@ -188,7 +194,7 @@ namespace DocumentFlow.Controllers
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
                 user.Patronymic = model.Patronymic;
-                user.Position = model.Position;
+                user.PositionId = model.PositionId;
                 IdentityResult result = await UserManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {

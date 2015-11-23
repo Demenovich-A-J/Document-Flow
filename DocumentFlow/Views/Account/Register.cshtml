@@ -1,6 +1,7 @@
 ﻿@model DocumentFlow.Models.RegisterModel
 @{
     Layout = null;
+    IEnumerable<SelectListItem> positions = ViewBag.Positions;
 }
 
 <head>
@@ -36,11 +37,7 @@
                         <br>
 
                         <span>Должность:</span>
-                        @Html.DropDownListFor(model => model.Position, new[]
-                {
-                    new SelectListItem(){Text = "Директор", Value = "1"},
-                    new SelectListItem(){Text = "Рабочий", Value = "2"}
-                });
+                        @Html.DropDownListFor(model => model.PositionId, positions)
                 <br>
 
                 <span>Пароль:</span>@Html.EditorFor(model => model.Password)
