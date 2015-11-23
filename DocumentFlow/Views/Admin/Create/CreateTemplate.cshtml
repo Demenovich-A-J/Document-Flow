@@ -33,7 +33,7 @@
         {
             @Html.AntiForgeryToken()
 
-            @Html.EditorFor(model => model.Text, new {htmlAttributes = new {@id = "edit", autofocus = ""}})
+            @Html.EditorFor(model => model.Text, new {htmlAttributes = new {@id = "edit", autofocus = "", name = "form"}})
 
             <input class="button" name="submit" type="submit" value="Добавить">
 
@@ -97,7 +97,6 @@
                     });
 
                     $('#edit').froalaEditor({
-                        // Add the custom buttons in the toolbarButtons list, after the separator.
                         tabSpaces: 5,
                         disableRightClick: true,
                         inlineMode: false,

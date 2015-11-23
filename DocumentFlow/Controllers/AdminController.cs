@@ -209,5 +209,21 @@ namespace DocumentFlow.Controllers
             return View("Create/CreateTemplate", new DocumentTemplate());
 
         }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public async Task<ActionResult> CreateTemplate(Dictionary<string,string> param)
+        {
+
+
+            var a = param;
+            /*using (ApplicationContext context = new ApplicationContext())
+            {
+                var position = await context.Positions.FindAsync(model.Id);
+                context.Entry(position).CurrentValues.SetValues(model);
+                context.SaveChanges();
+            }*/
+            return RedirectToAction("DocumentTemplates");
+        }
     }
 }

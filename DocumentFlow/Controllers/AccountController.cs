@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.Owin.Security;
 using System.Net.Mail;
+using WebGrease.Css.Extensions;
 
 namespace DocumentFlow.Controllers
 {
@@ -91,6 +92,14 @@ namespace DocumentFlow.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginModel model, string returnUrl)
         {
+
+            IEnumerable<ApplicationUser> users;
+
+            using (ApplicationContext context =  new ApplicationContext())
+            {
+                users = new List<ApplicationUser>(context.Users);
+            }
+
             if (ModelState.IsValid)
             {
                 ApplicationUser user = await UserManager.FindAsync(model.Login, model.Password);
