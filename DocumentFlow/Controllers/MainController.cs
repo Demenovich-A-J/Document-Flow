@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using DocumentFlow.Models;
 
 namespace DocumentFlow.Controllers
 {
@@ -12,6 +13,17 @@ namespace DocumentFlow.Controllers
         public ActionResult Index()
         {
             return View();
+        }
+
+        public ActionResult DocumentTemplates()
+        {
+            IEnumerable<DocumentTemplate> templates = new List<DocumentTemplate>();
+            using(ApplicationContext context = new ApplicationContext())
+            {
+                templates = new List<DocumentTemplate>(context.Templates);
+            }
+
+            return View(templates);
         }
     }
 }

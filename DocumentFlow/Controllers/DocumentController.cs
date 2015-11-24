@@ -11,10 +11,15 @@ namespace DocumentFlow.Controllers
 {
     public class DocumentController : Controller
     {
-
         [HttpGet]
-        public ActionResult ConvertView(DocumentTemplate template)
+        [ValidateInput(false)]
+        public ActionResult ConvertView(string id)
         {
+            DocumentTemplate template;
+            using(ApplicationContext context = new ApplicationContext())
+            {
+                template = context.Templates.Find(id);
+            }
             template.Text = ReplaceBy(template.Text, BuildDictionary());
             return View(template);
         }
@@ -48,12 +53,18 @@ namespace DocumentFlow.Controllers
                 positions = new List<Position>(context.Positions);
             }
 
-            Dictionary<string, string> dictionary = new Dictionary<string, string>();
+            Dictionary<string, string> dictionary = new Dictionary<string, string>
+        {
+            {"#БольшойТекст", "<textarea></textarea>"},
+            {"#Текст", "<input type='text'></input>"},
+            {"#ФИО", AccountController.FullName},
+            {"#Дата", "<input type='date'></input>"},
+            {"#Время", "<input type='time'></input>"}
+        };
 
             foreach (var position in positions)
             {
-                var lowerCasePosition = position.Name.ToLower();
-                dictionary.Add("#" + lowerCasePosition, SelectHtml(position.Id));
+                dictionary.Add("#" + position.Name, SelectHtml(position.Id));
             }
 
             return dictionary;

@@ -1,0 +1,31 @@
+﻿@model IEnumerable<DocumentFlow.Models.DocumentTemplate>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table style="width: 40%; margin-bottom: 20px;">
+    @if (Model != null && Model.Count() != 0)
+    {
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Тип</th>
+                <th></th>
+            </tr>
+        </thead>
+        foreach (var item in Model)
+        {
+            <tbody>
+                <tr>
+                    <td>@item.Name</td> 
+                    <td>@item.TypeID</td> 
+                    <td>@Html.ActionLink("Заполнить", "ConvertView", "Document", new { Id = item.Id }, null)</td>
+                </tr>
+            </tbody>
+        }
+    }
+    else
+    {
+        <tr>список пуст</tr>
+    }
+</table>

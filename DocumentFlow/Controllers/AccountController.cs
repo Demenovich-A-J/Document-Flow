@@ -48,7 +48,8 @@ namespace DocumentFlow.Controllers
                 positions = new List<Position>(context.Positions);
             }
 
-            ViewBag.Positions = positions.Select(x => new SelectListItem() { Text = x.Name, Value = x.Id });
+            ViewBag.Positions = new List<SelectListItem>(positions.Select(x => new SelectListItem() { Text = x.Name, Value = x.Id }));
+            
             return View();
         }
 
@@ -85,6 +86,14 @@ namespace DocumentFlow.Controllers
                     }
                 }
             }
+            IEnumerable<Position> positions;
+            using (ApplicationContext context = new ApplicationContext())
+            {
+                positions = new List<Position>(context.Positions);
+            }
+
+            ViewBag.Positions = new List<SelectListItem>(positions.Select(x => new SelectListItem() { Text = x.Name, Value = x.Id }));
+            
             return View(model);
         }
 
