@@ -32,14 +32,11 @@ namespace DocumentFlow.Controllers
             }
         }
 
+
+
         public ActionResult DocumentTemplates()
         {
-            IEnumerable<DocumentTemplate> templates = new List<DocumentTemplate>();
-            using(ApplicationContext context = new ApplicationContext())
-            {
-                templates = new List<DocumentTemplate>(context.Templates);
-            }
-            return View("Index/DocumentTemplates", templates);
+            return View("Index/DocumentTemplates");
         }
         public ActionResult EditTemplate()
         {
@@ -129,10 +126,21 @@ namespace DocumentFlow.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> DeleteUser(string id)
+        {
+            ApplicationUser user = await UserManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                IdentityResult result = await UserManager.DeleteAsync(user);
+            }
+            return RedirectToAction("Users");
+        }
+
+        [HttpGet]
         public ActionResult Positions()
         {
-            var positions = new List<Position>();
-            using (ApplicationContext context = new ApplicationContext())
+            List<Position> positions;
+            using (var context = new ApplicationContext())
             {
                 positions = context.Positions.ToList();
             }
@@ -215,49 +223,18 @@ namespace DocumentFlow.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult CreateTemplate(DocumentTemplate template)
+        public async Task<ActionResult> CreateTemplate(Dictionary<string,string> param)
         {
-            template.Name = "Default1";
-            template.TypeID = 1;
-            using(ApplicationContext context = new ApplicationContext())
+
+
+            var a = param;
+            /*using (ApplicationContext context = new ApplicationContext())
             {
-                context.Templates.Add(template);
+                var position = await context.Positions.FindAsync(model.Id);
+                context.Entry(position).CurrentValues.SetValues(model);
                 context.SaveChanges();
-            }
-
-            return RedirectToAction("DocumentTemplates", "Admin");
-        }
-
-        [HttpGet]
-        public ActionResult EditTemplate(string id)
-        {
-            IEnumerable<Position> positions;
-            using (ApplicationContext context = new ApplicationContext())
-            {
-                positions = new List<Position>(context.Positions.ToList());
-            }
-
-            ViewBag.Positions = positions;
-
-            DocumentTemplate template = new DocumentTemplate();
-            using(ApplicationContext context = new ApplicationContext())
-            {
-                template = context.Templates.Find(id);
-            }
-            return View("Edit/EditTemplate", template);
-        }
-
-        [HttpPost]
-        [ValidateInput(false)]
-        public ActionResult EditTemplate(DocumentTemplate template)
-        {
-            using (ApplicationContext context = new ApplicationContext())
-            {
-                var oldTemplate = context.Templates.Find(template.Id);
-                context.Entry(oldTemplate).CurrentValues.SetValues(template);
-                context.SaveChanges();
-            }
-            return RedirectToAction("DocumentTemplates", "Admin");
+            }*/
+            return RedirectToAction("DocumentTemplates");
         }
     }
 }

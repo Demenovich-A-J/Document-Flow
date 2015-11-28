@@ -1,8 +1,14 @@
-﻿@model DocumentFlow.Models.DocumentTemplate
+﻿@using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
+@using DocumentFlow.Controllers
+@model DocumentFlow.Models.DocumentTemplate
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     var positions = ViewBag.Positions;
+    AjaxOptions ajaxOptions = new AjaxOptions
+    {
+        UpdateTargetId = "status"
+    };
 }
 
 <div class="main-block">
@@ -33,10 +39,14 @@
         {
             @Html.AntiForgeryToken()
 
-            @Html.EditorFor(model => model.Text, new {htmlAttributes = new {@id = "edit", autofocus = "", name = "form"}})
+            @Html.EditorFor(model => model.Text, new { htmlAttributes = new { @id = "edit", autofocus = "", name = "form" } })
 
+
+            <a href="#" onclick="preview();" class="button" style="float: left;">Предпросмотр</a>
             <input class="button" name="submit" type="submit" value="Добавить">
-
+            <br>
+            <div class="view"></div>
+            
             <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
             <!-- Include JS files. -->
@@ -82,14 +92,11 @@
                         refreshAfterCallback: true,
                         options: {
                             @{
-            foreach (var position in positions)
+                                foreach (var position in positions)
                                 {
                                     @Html.Raw("\'#" + @position.Name + "\'" + ":" + "\'" + @position.Name + "\',\n")
                                 }
                             }
-
-                        
-                        
                         },
                         callback: function(cmd, val) {
                             this.html.insert(val);
@@ -176,6 +183,24 @@
                     positions = newPositions;
                 };
 
+                function preview() {
+                    var name = $("#edit").val();
+                    $.ajax({
+                        url: '/HomeController/GetDataForInvoiceNumber',
+                        type: 'POST',
+                        data: JSON.stringify(name),
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        error: function (xhr) {
+                            alert('Error: ' + xhr.statusText);
+                        },
+                        success: function (result) {
+                            $("view").html(result);
+                        },
+                        async: true,
+                        processData: false
+                    });
+                }
             </script>
         }
     </div>
