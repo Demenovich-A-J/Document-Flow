@@ -1,0 +1,25 @@
+﻿@model DocumentFlow.Models.DocumentType
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="main-block">
+
+    <div class="header">
+        <h1>Добавление типа документа</h1>
+    </div>
+    <div class="new-meta">
+        <div class="admin-login" style="padding: 40px 59px;">
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
+
+                <span style="width: 155px;">Название : </span>
+                @Html.EditorFor(model => model.Name)
+                <br>
+                <input class="button" name="submit" type="submit" value="Добавить">
+            }
+        </div>
+    </div>
+</div>
