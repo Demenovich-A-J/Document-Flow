@@ -9,60 +9,107 @@ using DocumentFlow.Models;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.Owin.Security;
+using BL.AbstractClasses;
+using BL.DocumentTemplatesHandlers;
+using BL.PositionsHandler;
+using BL.DocumentTypeHandlers;
+using BL.DocumentHandler;
+using BL.RolesHandlers;
+using EntityModels;
+using BL.UsersHandlers;
 
 namespace DocumentFlow.Controllers
 {
     public class AdminController : Controller
     {
-        // GET
+        #region Handlers
 
-        private ApplicationRoleManager RoleManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().GetUserManager<ApplicationRoleManager>();
-            }
-        }
+        protected static RepositoryHandler<EntityModels.DocumentTemplate> _templatesHandler =
+            new DocumentTemplatesRepositoryHandler();
 
-        private ApplicationUserManager UserManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-        }
+        protected static RepositoryHandler<EntityModels.Position> _positionsHandler =
+            new PositionsRepositoryHandler();
 
+        protected static RepositoryHandler<EntityModels.DocumentType> _documentTypesHandler =
+            new DocumentTypesRepositoryHandler();
+
+        protected static RepositoryHandler<EntityModels.Document> _documentsHandler =
+            new DocumentsRepositoryHandler();
+
+        protected static RepositoryHandler<EntityModels.Role> _rolesHandler =
+            new RolesRepositoryHandler();
+
+        protected static RepositoryHandler<EntityModels.User> _usersHandler =
+            new UsersRepositoryHandler();
+
+        #endregion
+
+        #region Template
         public ActionResult DocumentTemplates()
         {
-            IEnumerable<DocumentTemplate> templates = new List<DocumentTemplate>();
-            using(ApplicationContext context = new ApplicationContext())
-            {
-                templates = new List<DocumentTemplate>(context.Templates);
-            }
+            var templates = _templatesHandler.GetAll(x => true);
             return View("Index/DocumentTemplates", templates);
         }
         public ActionResult EditTemplate()
         {
             return View("Edit/EditTemplate");
         }
-        public ActionResult Users()
+
+        [HttpGet]
+        public ActionResult CreateTemplate()
         {
-            return View("Index/Users", UserManager.Users.ToList());
+            var positions = _positionsHandler.GetAll(x => true);
+            ViewBag.Positions = positions;
+
+            return View("Create/CreateTemplate", new DocumentTemplate());
+
         }
 
-        public ActionResult DocumentTypes()
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult CreateTemplate(EntityModels.DocumentTemplate template)
         {
-            IEnumerable<DocumentType> types;
-            using(ApplicationContext context = new ApplicationContext())
-            {
-                types = new List<DocumentType>(context.DocumentTypes);
-            }
-            return View("Index/DocumentTypes", types);
+            template.Name = "Default1";
+            template.TypeId = 1;
+
+            _templatesHandler.Add(template);
+
+            return RedirectToAction("DocumentTemplates", "Admin");
         }
+
+        [HttpGet]
+        public async Task<ActionResult> EditTemplate(int id)
+        {
+            var positions = _positionsHandler.GetAll(x => true);
+            ViewBag.Positions = positions;
+
+            EntityModels.DocumentTemplate template = await _templatesHandler.FindById(id);
+            return View("Edit/EditTemplate", template);
+        }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult EditTemplate(EntityModels.DocumentTemplate template)
+        {
+            _templatesHandler.Update(template);
+            return RedirectToAction("DocumentTemplates", "Admin");
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult> RemoveTemplate(int id)
+        {
+            var template = await _templatesHandler.FindById(id);
+            _templatesHandler.Remove(template);
+            return RedirectToAction("DocumentTemplates");
+        }
+        #endregion
+
+        #region Role
 
         public ActionResult Roles()
         {
-            return View("Index/Roles", RoleManager.Roles.ToList());
+            return View("Index/Roles", _rolesHandler.GetAll(x => true));
         }
 
         public ActionResult CreateRole()
@@ -70,30 +117,82 @@ namespace DocumentFlow.Controllers
             return View("Create/CreateRole");
         }
 
+        [HttpPost]
+        public ActionResult CreateRole(Role role)
+        {
+            if (ModelState.IsValid)
+            {
+                _rolesHandler.Add(role);
+            }
+            return RedirectToAction("Roles");
+        }
+
+        public async Task<ActionResult> EditRole(int id)
+        {
+            if (ModelState.IsValid)
+            {
+                var role = await _rolesHandler.FindById(id);
+
+                if (role != null)
+                {
+                    return View("Edit/EditRole", role);
+                }
+            }
+            return RedirectToAction("Roles");
+        }
+
+        [HttpPost]
+        public ActionResult EditRole(Role role)
+        {
+            if (ModelState.IsValid)
+            {
+                _rolesHandler.Update(role);
+            }
+            return RedirectToAction("Roles");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DeleteRole(int id)
+        {
+            var role = await _rolesHandler.FindById(id);
+
+            if (role != null)
+            {
+                _rolesHandler.Remove(role);
+            }
+            return RedirectToAction("Roles");
+        }
+        #endregion
+
+        #region User
+        public ActionResult Users()
+        {
+            return View("Index/Users", _usersHandler.GetAll(x => true));
+        }
+
+        #endregion
+
+        #region DocumentType
+        public ActionResult DocumentTypes()
+        {
+            return View("Index/DocumentTypes", _documentTypesHandler.GetAll(x => true));
+        }
+
         public ActionResult CreateDocumentType()
         {
             return View("Create/CreateDocumentType");
         }
 
-        public async Task<ActionResult> EditDocumentType(string id)
+        public async Task<ActionResult> EditDocumentType(int id)
         {
-            DocumentType type;
-            using(var context = new ApplicationContext())
-            {
-                type = await context.DocumentTypes.FindAsync(id);
-            }
+            var type = await _documentTypesHandler.FindById(id);
             return View("Edit/EditDocumentType", type);
         }
-        
+
         [HttpPost]
-        public async Task<ActionResult> EditDocumentType(DocumentType documentType)
+        public ActionResult EditDocumentType(DocumentType documentType)
         {
-            using(var context = new ApplicationContext())
-            {
-                var currentType = await context.DocumentTypes.FindAsync(documentType.Id);
-                context.Entry(currentType).CurrentValues.SetValues(documentType);
-                context.SaveChanges();
-            }
+            _documentTypesHandler.Update(documentType);
             return RedirectToAction("DocumentTypes");
         }
 
@@ -102,107 +201,29 @@ namespace DocumentFlow.Controllers
         {
             if (ModelState.IsValid)
             {
-                using(var context = new ApplicationContext())
-                {
-                    context.DocumentTypes.Add(documentType);
-                    context.SaveChanges();
-                }
-
+                _documentTypesHandler.Add(documentType);
                 return RedirectToAction("DocumentTypes");
             }
             return View("Create/CreateDocumentType", documentType);
         }
 
         [HttpGet]
-        public async Task<ActionResult> RemoveDocumentType(string id)
+        public async Task<ActionResult> RemoveDocumentType(int id)
         {
-            using (ApplicationContext context = new ApplicationContext())
+            var type = await _documentTypesHandler.FindById(id);
+            if (type != null)
             {
-                var type = await context.DocumentTypes.FindAsync(id);
-                context.DocumentTypes.Remove(type);
-                context.SaveChanges();
+                _documentTypesHandler.Remove(type);
             }
             return RedirectToAction("DocumentTypes");
         }
+        #endregion
 
-        [HttpPost]
-        public async Task<ActionResult> CreateRole(CreateRoleModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                IdentityResult result = await RoleManager.CreateAsync(new ApplicationRole
-                {
-                    Name = model.Name,
-                    Description = model.Description
-                });
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Roles");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Что-то пошло не так");
-                }
-            }
-            return View("Create/CreateRole", model);
-        }
-
-        public async Task<ActionResult> EditRole(string id)
-        {
-            if (ModelState.IsValid)
-            {
-                ApplicationRole role = await RoleManager.FindByIdAsync(id);
-                if (role != null)
-                {
-                    return View("Edit/EditRole", new EditRoleModel { Name = role.Name, Description = role.Description });
-                }
-            }
-            return RedirectToAction("Roles");
-        }
-        [HttpPost]
-        public async Task<ActionResult> EditRole(EditRoleModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                ApplicationRole role = await RoleManager.FindByIdAsync(model.Id);
-                if (role != null)
-                {
-                    role.Description = model.Description;
-                    role.Name = model.Name;
-                    IdentityResult result = await RoleManager.UpdateAsync(role);
-                    if (result.Succeeded)
-                    {
-                        return RedirectToAction("Roles");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Что-то пошло не так");
-                    }
-                }
-            }
-            return View("Edit/EditRole", model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> DeleteRole(string id)
-        {
-            ApplicationRole role = await RoleManager.FindByIdAsync(id);
-            if (role != null)
-            {
-                IdentityResult result = await RoleManager.DeleteAsync(role);
-            }
-            return RedirectToAction("Roles");
-        }
-
+        #region Position
         [HttpGet]
         public ActionResult Positions()
         {
-            var positions = new List<Position>();
-            using (ApplicationContext context = new ApplicationContext())
-            {
-                positions = context.Positions.ToList();
-            }
-            return View("Index/Positions", positions);
+            return View("Index/Positions", _positionsHandler.GetAll(x => true));
         }
 
         [HttpGet]
@@ -212,130 +233,41 @@ namespace DocumentFlow.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreatePosition(Position model)
+        public ActionResult CreatePosition(Position position)
         {
             if (ModelState.IsValid)
             {
-                using (ApplicationContext context = new ApplicationContext())
-                {
-                    context.Positions.Add(new Position() { Id = "", Name = model.Name });
-                    context.SaveChanges();
-                }
+                _positionsHandler.Add(position);
             }
 
             return RedirectToAction("Positions");
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditPosition(string id)
+        public async Task<ActionResult> EditPosition(int id)
         {
-            Position editPosition = new Position();
-            using (ApplicationContext context = new ApplicationContext())
-            {
-                var position = await context.Positions.FindAsync(id);
-                editPosition.Id = position.Id;
-                editPosition.Name = position.Name;
-            }
-            return View("Edit/EditPosition", editPosition);
+            var position = await _positionsHandler.FindById(id);
+            return View("Edit/EditPosition", position);
         }
 
         [HttpPost]
-        public async Task<ActionResult> EditPosition(Position model)
+        public ActionResult EditPosition(Position position)
         {
-            using (ApplicationContext context = new ApplicationContext())
-            {
-                var position = await context.Positions.FindAsync(model.Id);
-                context.Entry(position).CurrentValues.SetValues(model);
-                context.SaveChanges();
-            }
+            _positionsHandler.Update(position);
             return RedirectToAction("Positions");
         }
 
         [HttpGet]
-        public async Task<ActionResult> DeletePosition(string id)
+        public async Task<ActionResult> DeletePosition(int id)
         {
-            using (ApplicationContext context = new ApplicationContext())
+            var position = await _positionsHandler.FindById(id);
+            if(position != null)
             {
-                var position = await context.Positions.FindAsync(id);
-                context.Positions.Remove(position);
-                context.SaveChanges();
+                _positionsHandler.Remove(position);
             }
             return RedirectToAction("Positions");
         }
 
-        [HttpGet]
-        public ActionResult CreateTemplate()
-        {
-            IEnumerable<Position> positions;
-            using (ApplicationContext context = new ApplicationContext())
-            {
-                positions = new List<Position>(context.Positions.ToList());
-            }
-
-            ViewBag.Positions = positions;
-
-            return View("Create/CreateTemplate", new DocumentTemplate());
-
-        }
-
-        [HttpPost]
-        [ValidateInput(false)]
-        public ActionResult CreateTemplate(DocumentTemplate template)
-        {
-            template.Name = "Default1";
-            template.TypeID = 1;
-            using(ApplicationContext context = new ApplicationContext())
-            {
-                context.Templates.Add(template);
-                context.SaveChanges();
-            }
-
-            return RedirectToAction("DocumentTemplates", "Admin");
-        }
-
-        [HttpGet]
-        public ActionResult EditTemplate(string id)
-        {
-            IEnumerable<Position> positions;
-            using (ApplicationContext context = new ApplicationContext())
-            {
-                positions = new List<Position>(context.Positions.ToList());
-            }
-
-            ViewBag.Positions = positions;
-
-            DocumentTemplate template = new DocumentTemplate();
-            using(ApplicationContext context = new ApplicationContext())
-            {
-                template = context.Templates.Find(id);
-            }
-            return View("Edit/EditTemplate", template);
-        }
-
-        [HttpPost]
-        [ValidateInput(false)]
-        public ActionResult EditTemplate(DocumentTemplate template)
-        {
-            using (ApplicationContext context = new ApplicationContext())
-            {
-                var oldTemplate = context.Templates.Find(template.Id);
-                context.Entry(oldTemplate).CurrentValues.SetValues(template);
-                context.SaveChanges();
-            }
-            return RedirectToAction("DocumentTemplates", "Admin");
-        }
-
-
-        [HttpGet]
-        public async Task<ActionResult> RemoveTemplate(string id)
-        {
-            using (ApplicationContext context = new ApplicationContext())
-            {
-                var template = await context.Templates.FindAsync(id);
-                context.Templates.Remove(template);
-                context.SaveChanges();
-            }
-            return RedirectToAction("DocumentTemplates");
-        }
+        #endregion
     }
 }

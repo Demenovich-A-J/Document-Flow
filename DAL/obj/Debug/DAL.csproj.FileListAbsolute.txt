@@ -1,0 +1,14 @@
+D:\Рабочий стол\DocumentFlow\DAL\obj\Debug\DAL.csprojResolveAssemblyReference.cache
+D:\Рабочий стол\DocumentFlow\DAL\bin\Debug\DAL.dll.config
+D:\Рабочий стол\DocumentFlow\DAL\bin\Debug\DAL.dll
+D:\Рабочий стол\DocumentFlow\DAL\bin\Debug\DAL.pdb
+D:\Рабочий стол\DocumentFlow\DAL\bin\Debug\EntityFramework.dll
+D:\Рабочий стол\DocumentFlow\DAL\bin\Debug\EntityFramework.SqlServer.dll
+D:\Рабочий стол\DocumentFlow\DAL\bin\Debug\EntityFramework.xml
+D:\Рабочий стол\DocumentFlow\DAL\bin\Debug\EntityFramework.SqlServer.xml
+D:\Рабочий стол\DocumentFlow\DAL\obj\Debug\DAL.dll
+D:\Рабочий стол\DocumentFlow\DAL\obj\Debug\DAL.pdb
+D:\Рабочий стол\DocumentFlow\DAL\bin\Debug\ru\EntityFramework.resources.dll
+D:\Рабочий стол\DocumentFlow\DAL\bin\Debug\ru\EntityFramework.SqlServer.resources.dll
+D:\Рабочий стол\DocumentFlow\DAL\bin\Debug\EntityModels.dll
+D:\Рабочий стол\DocumentFlow\DAL\bin\Debug\EntityModels.pdb

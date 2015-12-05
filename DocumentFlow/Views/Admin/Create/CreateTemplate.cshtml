@@ -1,4 +1,4 @@
-﻿@model DocumentFlow.Models.DocumentTemplate
+﻿@model EntityModels.DocumentTemplate
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -34,11 +34,12 @@
             @Html.AntiForgeryToken()
 
             Model.Name = "Default";
-            Model.TypeID = 1;
+            Model.TypeId = 1;
 
             @Html.EditorFor(model => model.Text, new { htmlAttributes = new { @id = "edit", autofocus = "", name = "form" } })
 
             <input class="button" name="submit" type="submit" value="Добавить">
+            <input id="preview" type="button" value="Предварительный просмотр" />
         }
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -76,6 +77,18 @@
 
         <!-- Initialize the editor. -->
         <script>
+            $("#preview").click(function (stringId) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Convert", "Document")',
+                    data: stringId,
+                    success: function (data) {
+                        $("#preview").html(data);
+                    }
+                });
+            });
+
+
             $(function () {
                 $.FroalaEditor.DefineIcon('my_dropdown', { NAME: 'cog' });
                 $.FroalaEditor.RegisterCommand('my_dropdown', {

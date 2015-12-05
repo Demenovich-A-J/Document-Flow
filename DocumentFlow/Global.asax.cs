@@ -1,4 +1,7 @@
-﻿using System;
+﻿using BL.RolesHandlers;
+using BL.UsersHandlers;
+using EntityModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,6 +14,32 @@ namespace DocumentFlow
     {
         protected void Application_Start()
         {
+            var context = new Database();
+
+            if (!context.Database.Exists())
+            {
+                context.Database.Create();
+
+                //add roles user admin
+                var rolesHandler = new RolesRepositoryHandler();
+                rolesHandler.Add(new Role() { Name = "Admin" });
+                rolesHandler.Add(new Role() { Name = "User" });
+
+                //add admin
+                var usersHandler = new UsersRepositoryHandler();
+                usersHandler.Add(new User()
+                {
+                    FirstName = "admin",
+                    LastName = "admin",
+                    Email = "admin",
+                    Patronymic = "admin",
+                    Password = "123456",
+                    UserName = "admin",
+                    RoleId = 1,
+                    PositionId = -1
+                });
+            }
+
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
         }

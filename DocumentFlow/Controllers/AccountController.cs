@@ -10,146 +10,96 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.Owin.Security;
 using System.Net.Mail;
+using BL.PositionsHandler;
+using EntityModels;
+using BL.UsersHandlers;
+using BL.AbstractClasses;
+using System.Web.Helpers;
+using System.Net;
+using System.Web.Security;
 
 namespace DocumentFlow.Controllers
 {
     public class AccountController : Controller
     {
+        protected static UserProvider _currentUserProvider;
+
         public static string FullName;
-        private static string UserId;
 
-        private ApplicationRoleManager RoleManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().GetUserManager<ApplicationRoleManager>();
-            }
-        }
-        private ApplicationUserManager UserManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-        }
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
-        }
+        protected static PositionsHandler _positionsHandler = new PositionsHandler();
+        protected static RepositoryHandler<User> _usersHandler = new UsersRepositoryHandler();
 
+        protected IAuthentication _customAuthentification = new CustomAuthentication();
+
+
+        #region Registration
         public ActionResult Register()
         {
-            IEnumerable<Position> positions;
-            using(ApplicationContext context = new ApplicationContext())
-            {
-                positions = new List<Position>(context.Positions);
-            }
-
-            ViewBag.Positions = new List<SelectListItem>(positions.Select(x => new SelectListItem() { Text = x.Name, Value = x.Id }));
-            
+            ViewBag.Positions = _positionsHandler.PositionsSelectList();
             return View();
         }
 
         [HttpPost]
-        public async Task<ActionResult> Register(RegisterModel model)
+        public ActionResult Register(RegisterModel model)
         {
             if (ModelState.IsValid)
             {
-                ApplicationUser user =
-                    new ApplicationUser
-                    {
-                        UserName = model.Login,
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        Patronymic = model.Patronymic,
-                        PositionId = model.PositionId,
-                        Email = model.Email
-                    };
 
-                IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                var user = _customAuthentification.Register(model);
+                if (user != null)
                 {
-                    FullName = user.FirstName + " " + user.LastName;
-                    UserId = user.Id;
-
-                    await UserManager.AddToRoleAsync(UserId, "User");
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    foreach (string error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error);
-                    }
+                    return RedirectToAction("Login");
                 }
             }
-            IEnumerable<Position> positions;
-            using (ApplicationContext context = new ApplicationContext())
-            {
-                positions = new List<Position>(context.Positions);
-            }
 
-            ViewBag.Positions = new List<SelectListItem>(positions.Select(x => new SelectListItem() { Text = x.Name, Value = x.Id }));
-            
+            ViewBag.Positions = _positionsHandler.PositionsSelectList();
             return View(model);
         }
+        #endregion
 
-        public ActionResult Login(string returnUrl)
+        #region Login
+
+        public ActionResult Login()
         {
-            ViewBag.returnUrl = returnUrl;
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginModel model, string returnUrl)
+        public async Task<ActionResult> Login(LoginModel loginModel)
         {
-
-            IEnumerable<ApplicationUser> users;
-
-            using (ApplicationContext context =  new ApplicationContext())
-            {
-                users = new List<ApplicationUser>(context.Users);
-            }
-
             if (ModelState.IsValid)
             {
-                ApplicationUser user = await UserManager.FindAsync(model.Login, model.Password);
-                if (user == null)
-                {
-                    ModelState.AddModelError("", "Неверный логин или пароль.");
-                }
-                else
-                {
-                    ClaimsIdentity claim = await UserManager.CreateIdentityAsync(user,
-                                            DefaultAuthenticationTypes.ApplicationCookie);
-                    AuthenticationManager.SignOut();
-                    AuthenticationManager.SignIn(new AuthenticationProperties
-                    {
-                        IsPersistent = true
-                    }, claim);
-                    if (String.IsNullOrEmpty(returnUrl))
-                    {
-                        UserId = user.Id;
-                        FullName = user.FirstName + " " + user.LastName;
+                _customAuthentification.LogOut();
+                var user = _customAuthentification.Login(loginModel);
 
-                        if (UserManager.IsInRole(UserId, "Admin"))
-                        {
-                            return RedirectToAction("Roles", "Admin");
-                        }
-                        return RedirectToAction("Index", "Main");
+                if (user != null)
+                {
+                    _currentUserProvider = _customAuthentification.GetUserProvider;
+                    FullName = user.FirstName + " " + user.LastName;
+
+                    if (await _currentUserProvider.IsInRole("Admin"))
+                    {
+                        return RedirectToAction("Roles", "Admin");
                     }
-                    return Redirect(returnUrl);
+                    return RedirectToAction("Index", "Main");
                 }
             }
-            ViewBag.returnUrl = returnUrl;
-            return View(model);
+            ModelState.AddModelError("", "Неверный логин или пароль");
+            return View();
         }
 
+        public ActionResult Logoff()
+        {
+            IAuthentication custom = new CustomAuthentication();
+            custom.LogOut();
 
+            return RedirectToAction("Index", "Home");
+        }
+        #endregion
+
+        #region DeleteUser
         [HttpGet]
         public ActionResult Delete()
         {
@@ -159,26 +109,27 @@ namespace DocumentFlow.Controllers
         [HttpGet]
         public async Task<ActionResult> DeleteConfirmed()
         {
-            ApplicationUser user = await UserManager.FindByIdAsync(UserId);
+            var user = await _currentUserProvider.GetUser();
             if (user != null)
             {
-                IdentityResult result = await UserManager.DeleteAsync(user);
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Login", "Account");
-                }
-                return RedirectToAction("Index", "Home");
-            }
-            return RedirectToAction("Index", "Home");
-        }
+                _usersHandler.Remove(user);
+                _customAuthentification.LogOut();
 
+                return RedirectToAction("Login", "Account");
+            }
+            return RedirectToAction("Index", "Main");
+        }
+        #endregion
+
+        #region EditUser
         [HttpGet]
         public async Task<ActionResult> Edit()
         {
-            ApplicationUser user = await UserManager.FindByIdAsync(UserId);
+            var user = await _currentUserProvider.GetUser();
+
             if (user != null)
             {
-                EditModel model = new EditModel
+                EditUserModel model = new EditUserModel
                 {
                     Login = user.UserName,
                     FirstName = user.FirstName,
@@ -187,15 +138,18 @@ namespace DocumentFlow.Controllers
                     Email = user.Email,
                     PositionId = user.PositionId
                 };
+                ViewBag.Positions = _positionsHandler.PositionsSelectList();
                 return View(model);
             }
+            _customAuthentification.LogOut();
             return RedirectToAction("Login", "Account");
         }
 
         [HttpPost]
-        public async Task<ActionResult> Edit(EditModel model)
+        public async Task<ActionResult> Edit(EditUserModel model)
         {
-            ApplicationUser user = await UserManager.FindByIdAsync(UserId);
+            var user = await _currentUserProvider.GetUser();
+
             if (user != null)
             {
                 user.Email = model.Email;
@@ -204,48 +158,41 @@ namespace DocumentFlow.Controllers
                 user.LastName = model.LastName;
                 user.Patronymic = model.Patronymic;
                 user.PositionId = model.PositionId;
-                IdentityResult result = await UserManager.UpdateAsync(user);
-                if (result.Succeeded)
-                {
-                    FullName = user.FirstName + " " + user.LastName;
-                    return RedirectToAction("Index", "Main");
-                }
-                else
-                {
-                    ViewBag.ErrorString = "Не удалось обновить данные. Попробуйте еще раз.";
-                    return RedirectToAction("Error", "Account");
-                }
+
+                FullName = model.FirstName + " " + model.LastName;
+
+                _usersHandler.Update(user);
+                return RedirectToAction("Index", "Main");
             }
             else
             {
-                ViewBag.ErrorString = "Не удалось найти пользователя. Попробуйте еще раз.";
-                return RedirectToAction("Error", "Account");
+                ModelState.AddModelError("", "Не удалось найти пользователя. Попробуйте еще раз.");
+                return RedirectToAction("Index", "Main");
             }
         }
+        #endregion
 
+        #region EditPassword
         [HttpGet]
         public ActionResult EditPassword()
         {
-            return View("Edit");
+            return View("EditPassword");
         }
 
         [HttpPost]
         public async Task<ActionResult> EditPassword(EditPasswordModel model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);
-            }
-            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
-            if (result.Succeeded)
-            {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                var user = await _currentUserProvider.GetUser();
                 if (user != null)
                 {
-                    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie, DefaultAuthenticationTypes.TwoFactorCookie);
-                    return RedirectToAction("Login", "Account");
+                    user.Password = model.NewPassword;
+                    _usersHandler.Update(user);
+
+                    _customAuthentification.LogOut();
+                    return RedirectToAction("Login");
                 }
-                return RedirectToAction("Index", "Main");
             }
             else
             {
@@ -253,84 +200,6 @@ namespace DocumentFlow.Controllers
             }
             return View(model);
         }
-
-        [HttpGet]
-        public ActionResult LogOff()
-        {
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie, DefaultAuthenticationTypes.TwoFactorCookie);
-            UserId = null;
-            FullName = null;
-            return RedirectToAction("Index", "Home");
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult ForgotPassword()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
-                {
-                    return View("ForgotPasswordConfirmation");
-                }
-                var callbackUrl = Url.Action("ResetPassword", "Account",
-                    new { userId = user.Id }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Сброс пароля",
-                    "Для сброса пароля, перейдите по ссылке <a href=\"" + callbackUrl + "\">сбросить</a>");
-                return RedirectToAction("ForgotPasswordConfirmation", "Account");
-            }
-            return View(model);
-        }
-
-        [AllowAnonymous]
-        public ActionResult ForgotPasswordConfirmation()
-        {
-            return View();
-        }
-
-        //
-        // GET: /Account/ResetPassword
-        [AllowAnonymous]
-        public ActionResult ResetPassword()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-            var user = await UserManager.FindByNameAsync(model.Email);
-            if (user == null)
-            {
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
-            }
-            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
-            if (result.Succeeded)
-            {
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
-            }
-            return View();
-        }
-
-        [AllowAnonymous]
-        public ActionResult ResetPasswordConfirmation()
-        {
-            return View();
-        }
+        #endregion
     }
 }

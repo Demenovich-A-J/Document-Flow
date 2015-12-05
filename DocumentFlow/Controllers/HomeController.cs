@@ -12,7 +12,6 @@ namespace DocumentFlow.Controllers
         public ActionResult Index()
         {
             return RedirectToAction("Login", "Account");
-            //return RedirectToAction("ConvertView", "Document", new { Text = "#ректор" });
         }
     }
 }

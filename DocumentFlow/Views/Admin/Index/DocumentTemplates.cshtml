@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DocumentFlow.Models.DocumentTemplate>
+﻿@model IEnumerable<EntityModels.DocumentTemplate>
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
@@ -27,7 +27,7 @@
                             <tbody>
                             <tr>
                                 <td>@item.Name</td>
-                                <td>@item.TypeID</td>
+                                <td>@item.TypeId</td>
                                 <td class="action-buttons">
                                     @Html.ActionLink(" ", "EditTemplate", "Admin", new { id = item.Id }, new {@class = "edit-button"})
                                     @Html.ActionLink(" ", "RemoveTemplate", new { id = item.Id }, new { @class = "remove-button" })

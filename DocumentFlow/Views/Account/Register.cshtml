@@ -37,7 +37,7 @@
                         <br>
 
                         <span>Должность:</span>
-                        @Html.DropDownListFor(model => model.PositionId, h)
+                        @Html.DropDownListFor(model => model.PositionId, positions);
                 <br>
 
                 <span>Пароль:</span>@Html.EditorFor(model => model.Password)

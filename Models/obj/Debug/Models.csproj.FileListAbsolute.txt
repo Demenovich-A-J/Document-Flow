@@ -1,0 +1,12 @@
+D:\Рабочий стол\DocumentFlow\Models\obj\Debug\Models.csprojResolveAssemblyReference.cache
+D:\Рабочий стол\DocumentFlow\Models\bin\Debug\Models.dll.config
+D:\Рабочий стол\DocumentFlow\Models\bin\Debug\Models.dll
+D:\Рабочий стол\DocumentFlow\Models\bin\Debug\Models.pdb
+D:\Рабочий стол\DocumentFlow\Models\bin\Debug\EntityFramework.dll
+D:\Рабочий стол\DocumentFlow\Models\bin\Debug\EntityFramework.SqlServer.dll
+D:\Рабочий стол\DocumentFlow\Models\bin\Debug\EntityFramework.xml
+D:\Рабочий стол\DocumentFlow\Models\bin\Debug\EntityFramework.SqlServer.xml
+D:\Рабочий стол\DocumentFlow\Models\bin\Debug\ru\EntityFramework.resources.dll
+D:\Рабочий стол\DocumentFlow\Models\bin\Debug\ru\EntityFramework.SqlServer.resources.dll
+D:\Рабочий стол\DocumentFlow\Models\obj\Debug\Models.dll
+D:\Рабочий стол\DocumentFlow\Models\obj\Debug\Models.pdb

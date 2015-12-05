@@ -4,11 +4,15 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using DocumentFlow.Models;
+using BL.AbstractClasses;
+using BL.DocumentTypeHandlers;
 
 namespace DocumentFlow.Controllers
 {
     public class MainController : Controller
     {
+        protected static RepositoryHandler<EntityModels.DocumentType> _documentTypesHandler =
+            new DocumentTypesRepositoryHandler();
         // GET: Main
         public ActionResult Index()
         {
@@ -17,11 +21,7 @@ namespace DocumentFlow.Controllers
 
         public ActionResult DocumentTemplates()
         {
-            IEnumerable<DocumentTemplate> templates = new List<DocumentTemplate>();
-            using(ApplicationContext context = new ApplicationContext())
-            {
-                templates = new List<DocumentTemplate>(context.Templates);
-            }
+            var templates = _documentTypesHandler.GetAll(x => true);
 
             return View(templates);
         }

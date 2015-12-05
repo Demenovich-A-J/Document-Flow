@@ -1,7 +1,8 @@
-﻿@model DocumentFlow.Models.EditModel
+﻿@model DocumentFlow.Models.EditUserModel
 
 @{
     ViewBag.Title = "DocumentFlow_Edit";
+    IEnumerable<SelectListItem> positions = ViewBag.Positions;
 }
 
 <div class="main-block">
@@ -28,12 +29,7 @@
                 @Html.EditorFor(model => model.Email)
                 <br>
                 <span>Должность:</span>
-                @Html.DropDownListFor(model => model.Position, new[]
-                {
-                    new SelectListItem() {Text = "Директор", Value = "1"},
-                    new SelectListItem() {Text = "Рабочий", Value = "2"}
-                })
-                ;
+                @Html.DropDownListFor(model => model.PositionId, positions);
             }
         }
         <input type="submit" class="button" value="Изменить"/>
