@@ -16,8 +16,10 @@
                 <div>
                     @Html.ValidationSummary()
                     @Html.HiddenFor(model => model.Id)
-                    <p>Название:  @Html.EditorFor(model => model.Name)</p>
-                    <p><input type="submit" value="Изменить" /></p>
+                    <p>Название: @Html.EditorFor(model => model.Name)</p>
+                    <p>
+                        <input type="submit" value="Изменить"/>
+                    </p>
                 </div>
             }
         </div>

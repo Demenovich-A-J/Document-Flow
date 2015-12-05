@@ -1,55 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using DocumentFlow.Models;
-using System.Threading.Tasks;
-using System.Security.Claims;
-using Microsoft.Owin.Security;
 using BL.AbstractClasses;
-using BL.DocumentTemplatesHandlers;
-using BL.PositionsHandler;
-using BL.DocumentTypeHandlers;
 using BL.DocumentHandler;
+using BL.DocumentTemplatesHandlers;
+using BL.DocumentTypeHandlers;
+using BL.PositionsHandler;
 using BL.RolesHandlers;
-using EntityModels;
 using BL.UsersHandlers;
+using EntityModels;
 
 namespace DocumentFlow.Controllers
 {
     public class AdminController : Controller
     {
+        #region User
+
+        public ActionResult Users()
+        {
+            return View("Index/Users", _usersHandler.GetAll(x => true));
+        }
+
+        #endregion
+
         #region Handlers
 
-        protected static RepositoryHandler<EntityModels.DocumentTemplate> _templatesHandler =
+        protected static RepositoryHandler<DocumentTemplate> _templatesHandler =
             new DocumentTemplatesRepositoryHandler();
 
-        protected static RepositoryHandler<EntityModels.Position> _positionsHandler =
+        protected static RepositoryHandler<Position> _positionsHandler =
             new PositionsRepositoryHandler();
 
-        protected static RepositoryHandler<EntityModels.DocumentType> _documentTypesHandler =
+        protected static RepositoryHandler<DocumentType> _documentTypesHandler =
             new DocumentTypesRepositoryHandler();
 
-        protected static RepositoryHandler<EntityModels.Document> _documentsHandler =
+        protected static RepositoryHandler<Document> _documentsHandler =
             new DocumentsRepositoryHandler();
 
-        protected static RepositoryHandler<EntityModels.Role> _rolesHandler =
+        protected static RepositoryHandler<Role> _rolesHandler =
             new RolesRepositoryHandler();
 
-        protected static RepositoryHandler<EntityModels.User> _usersHandler =
+        protected static RepositoryHandler<User> _usersHandler =
             new UsersRepositoryHandler();
 
         #endregion
 
         #region Template
+
         public ActionResult DocumentTemplates()
         {
             var templates = _templatesHandler.GetAll(x => true);
             return View("Index/DocumentTemplates", templates);
         }
+
         public ActionResult EditTemplate()
         {
             return View("Edit/EditTemplate");
@@ -62,12 +64,11 @@ namespace DocumentFlow.Controllers
             ViewBag.Positions = positions;
 
             return View("Create/CreateTemplate", new DocumentTemplate());
-
         }
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult CreateTemplate(EntityModels.DocumentTemplate template)
+        public ActionResult CreateTemplate(DocumentTemplate template)
         {
             template.Name = "Default1";
             template.TypeId = 1;
@@ -83,13 +84,13 @@ namespace DocumentFlow.Controllers
             var positions = _positionsHandler.GetAll(x => true);
             ViewBag.Positions = positions;
 
-            EntityModels.DocumentTemplate template = await _templatesHandler.FindById(id);
+            var template = await _templatesHandler.FindById(id);
             return View("Edit/EditTemplate", template);
         }
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult EditTemplate(EntityModels.DocumentTemplate template)
+        public ActionResult EditTemplate(DocumentTemplate template)
         {
             _templatesHandler.Update(template);
             return RedirectToAction("DocumentTemplates", "Admin");
@@ -103,6 +104,7 @@ namespace DocumentFlow.Controllers
             _templatesHandler.Remove(template);
             return RedirectToAction("DocumentTemplates");
         }
+
         #endregion
 
         #region Role
@@ -162,17 +164,11 @@ namespace DocumentFlow.Controllers
             }
             return RedirectToAction("Roles");
         }
-        #endregion
-
-        #region User
-        public ActionResult Users()
-        {
-            return View("Index/Users", _usersHandler.GetAll(x => true));
-        }
 
         #endregion
 
         #region DocumentType
+
         public ActionResult DocumentTypes()
         {
             return View("Index/DocumentTypes", _documentTypesHandler.GetAll(x => true));
@@ -217,9 +213,11 @@ namespace DocumentFlow.Controllers
             }
             return RedirectToAction("DocumentTypes");
         }
+
         #endregion
 
         #region Position
+
         [HttpGet]
         public ActionResult Positions()
         {
@@ -261,7 +259,7 @@ namespace DocumentFlow.Controllers
         public async Task<ActionResult> DeletePosition(int id)
         {
             var position = await _positionsHandler.FindById(id);
-            if(position != null)
+            if (position != null)
             {
                 _positionsHandler.Remove(position);
             }

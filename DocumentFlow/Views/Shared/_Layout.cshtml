@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using DocumentFlow.Controllers
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -12,7 +13,7 @@
     <div class="left-sidebar">
         <ul class="menu">
             <li class="menu-item">
-                <h1>@DocumentFlow.Controllers.AccountController.FullName</h1>
+                <h1>@AccountController.FullName</h1>
                 <ul class="submenu">
                     <li class="submenu-item">@Html.ActionLink("Редактировать", "Edit", "Account")</li>
                     <li class="submenu-item">@Html.ActionLink("Изменить пароль", "EditPassword", "Account")</li>

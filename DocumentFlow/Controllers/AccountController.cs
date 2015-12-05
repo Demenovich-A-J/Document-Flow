@@ -1,22 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using DocumentFlow.Models;
-using System.Threading.Tasks;
-using System.Security.Claims;
-using Microsoft.Owin.Security;
-using System.Net.Mail;
-using BL.PositionsHandler;
-using EntityModels;
-using BL.UsersHandlers;
 using BL.AbstractClasses;
-using System.Web.Helpers;
-using System.Net;
-using System.Web.Security;
+using BL.PositionsHandler;
+using BL.UsersHandlers;
+using DocumentFlow.Models;
+using EntityModels;
 
 namespace DocumentFlow.Controllers
 {
@@ -31,8 +19,8 @@ namespace DocumentFlow.Controllers
 
         protected IAuthentication _customAuthentification = new CustomAuthentication();
 
-
         #region Registration
+
         public ActionResult Register()
         {
             ViewBag.Positions = _positionsHandler.PositionsSelectList();
@@ -44,7 +32,6 @@ namespace DocumentFlow.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 var user = _customAuthentification.Register(model);
                 if (user != null)
                 {
@@ -55,6 +42,7 @@ namespace DocumentFlow.Controllers
             ViewBag.Positions = _positionsHandler.PositionsSelectList();
             return View(model);
         }
+
         #endregion
 
         #region Login
@@ -97,9 +85,11 @@ namespace DocumentFlow.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
         #endregion
 
         #region DeleteUser
+
         [HttpGet]
         public ActionResult Delete()
         {
@@ -119,9 +109,11 @@ namespace DocumentFlow.Controllers
             }
             return RedirectToAction("Index", "Main");
         }
+
         #endregion
 
         #region EditUser
+
         [HttpGet]
         public async Task<ActionResult> Edit()
         {
@@ -129,7 +121,7 @@ namespace DocumentFlow.Controllers
 
             if (user != null)
             {
-                EditUserModel model = new EditUserModel
+                var model = new EditUserModel
                 {
                     Login = user.UserName,
                     FirstName = user.FirstName,
@@ -164,15 +156,14 @@ namespace DocumentFlow.Controllers
                 _usersHandler.Update(user);
                 return RedirectToAction("Index", "Main");
             }
-            else
-            {
-                ModelState.AddModelError("", "Не удалось найти пользователя. Попробуйте еще раз.");
-                return RedirectToAction("Index", "Main");
-            }
+            ModelState.AddModelError("", "Не удалось найти пользователя. Попробуйте еще раз.");
+            return RedirectToAction("Index", "Main");
         }
+
         #endregion
 
         #region EditPassword
+
         [HttpGet]
         public ActionResult EditPassword()
         {
@@ -200,6 +191,7 @@ namespace DocumentFlow.Controllers
             }
             return View(model);
         }
+
         #endregion
     }
 }

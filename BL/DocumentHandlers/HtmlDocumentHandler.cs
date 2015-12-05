@@ -1,22 +1,19 @@
-﻿using DAL.AbstractRepository;
-using DAL.Repositories;
-using EntityModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DAL.AbstractRepository;
+using DAL.Repositories;
+using EntityModels;
 
 namespace BL.DocumentFandler
 {
     public class HtmlDocumentHandler
     {
-        protected DataRepository<User> _usersRepository;
+        protected string _fullUserName;
         protected DataRepository<Position> _positionsRepository;
         protected DataRepository<DocumentTemplate> _templatesRepository;
-
-        protected string _fullUserName;
+        protected DataRepository<User> _usersRepository;
 
         public HtmlDocumentHandler(string fullUserName)
         {
@@ -29,14 +26,14 @@ namespace BL.DocumentFandler
 
         public async Task<DocumentTemplate> ConvertView(int id)
         {
-            DocumentTemplate template = await _templatesRepository.FindById(id);
+            var template = await _templatesRepository.FindById(id);
             template.Text = ReplaceBy(template.Text, BuildDictionary());
             return template;
         }
 
         protected string ReplaceBy(string text, Dictionary<string, string> dictionary)
         {
-            string pattern = @"#(\w+)";
+            var pattern = @"#(\w+)";
 
             var matchCollection =
                 Regex.Matches(text, pattern, RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
@@ -60,13 +57,13 @@ namespace BL.DocumentFandler
             var positions = _positionsRepository.GetAll(x => true);
 
             var dictionary = new Dictionary<string, string>
-                {
-                    {"#БольшойТекст", "<textarea></textarea>"},
-                    {"#Текст", "<input type='text'></input>"},
-                    {"#ФИО", _fullUserName},
-                    {"#Дата", "<input type='date'></input>"},
-                    {"#Время", "<input type='time'></input>"}
-                };
+            {
+                {"#БольшойТекст", "<textarea></textarea>"},
+                {"#Текст", "<input type='text'></input>"},
+                {"#ФИО", _fullUserName},
+                {"#Дата", "<input type='date'></input>"},
+                {"#Время", "<input type='time'></input>"}
+            };
 
             foreach (var position in positions)
             {
@@ -85,13 +82,13 @@ namespace BL.DocumentFandler
         {
             var users = _usersRepository.GetAll(x => x.PositionId == id);
 
-            StringBuilder optionsString = new StringBuilder();
+            var optionsString = new StringBuilder();
             foreach (var user in users)
             {
                 optionsString.Append
                     ("<option value=" + user.Id + ">" +
-                    user.FirstName + " " + user.LastName + " " + user.Patronymic +
-                    "</option>");
+                     user.FirstName + " " + user.LastName + " " + user.Patronymic +
+                     "</option>");
             }
             return optionsString.ToString();
         }

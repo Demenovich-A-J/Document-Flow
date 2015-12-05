@@ -1,10 +1,6 @@
-﻿using DAL.AbstractRepository;
+﻿using System.Threading.Tasks;
+using DAL.AbstractRepository;
 using EntityModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
@@ -13,7 +9,7 @@ namespace DAL.Repositories
         public override async Task<Role> FindById(int id)
         {
             Role role;
-            using (var context = new EntityModels.Database())
+            using (var context = new Database())
             {
                 role = await context.Roles.FindAsync(id);
             }

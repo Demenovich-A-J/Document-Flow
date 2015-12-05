@@ -10,3 +10,15 @@ D:\Рабочий стол\DocumentFlow\Models\bin\Debug\ru\EntityFramework.SqlS
 D:\Рабочий стол\DocumentFlow\Models\obj\Debug\EntityModels.dll
 D:\Рабочий стол\DocumentFlow\Models\obj\Debug\EntityModels.pdb
 D:\Рабочий стол\DocumentFlow\Models\obj\Debug\EntityModels.csprojResolveAssemblyReference.cache
+D:\SourceTreeProjects\Document-Flow\Models\bin\Debug\EntityModels.dll.config
+D:\SourceTreeProjects\Document-Flow\Models\bin\Debug\EntityModels.dll
+D:\SourceTreeProjects\Document-Flow\Models\bin\Debug\EntityModels.pdb
+D:\SourceTreeProjects\Document-Flow\Models\bin\Debug\EntityFramework.dll
+D:\SourceTreeProjects\Document-Flow\Models\bin\Debug\EntityFramework.SqlServer.dll
+D:\SourceTreeProjects\Document-Flow\Models\bin\Debug\EntityFramework.xml
+D:\SourceTreeProjects\Document-Flow\Models\bin\Debug\EntityFramework.SqlServer.xml
+D:\SourceTreeProjects\Document-Flow\Models\bin\Debug\ru\EntityFramework.resources.dll
+D:\SourceTreeProjects\Document-Flow\Models\bin\Debug\ru\EntityFramework.SqlServer.resources.dll
+D:\SourceTreeProjects\Document-Flow\Models\obj\Debug\EntityModels.csprojResolveAssemblyReference.cache
+D:\SourceTreeProjects\Document-Flow\Models\obj\Debug\EntityModels.dll
+D:\SourceTreeProjects\Document-Flow\Models\obj\Debug\EntityModels.pdb

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Microsoft.Owin;
-using Owin;
-using DocumentFlow.Models;
-using Microsoft.Owin.Security.Cookies;
+﻿using DocumentFlow;
 using Microsoft.AspNet.Identity;
+using Microsoft.Owin;
+using Microsoft.Owin.Security.Cookies;
+using Owin;
 
-[assembly: OwinStartup(typeof(DocumentFlow.Startup))]
+[assembly: OwinStartup(typeof (Startup))]
 
 namespace DocumentFlow
 {
@@ -19,7 +15,7 @@ namespace DocumentFlow
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                LoginPath = new PathString("/Account/Login"),
+                LoginPath = new PathString("/Account/Login")
             });
         }
     }

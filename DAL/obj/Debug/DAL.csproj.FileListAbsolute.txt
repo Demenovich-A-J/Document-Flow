@@ -12,3 +12,17 @@ D:\Рабочий стол\DocumentFlow\DAL\bin\Debug\ru\EntityFramework.resourc
 D:\Рабочий стол\DocumentFlow\DAL\bin\Debug\ru\EntityFramework.SqlServer.resources.dll
 D:\Рабочий стол\DocumentFlow\DAL\bin\Debug\EntityModels.dll
 D:\Рабочий стол\DocumentFlow\DAL\bin\Debug\EntityModels.pdb
+D:\SourceTreeProjects\Document-Flow\DAL\bin\Debug\DAL.dll.config
+D:\SourceTreeProjects\Document-Flow\DAL\bin\Debug\DAL.dll
+D:\SourceTreeProjects\Document-Flow\DAL\bin\Debug\DAL.pdb
+D:\SourceTreeProjects\Document-Flow\DAL\bin\Debug\EntityFramework.dll
+D:\SourceTreeProjects\Document-Flow\DAL\bin\Debug\EntityFramework.SqlServer.dll
+D:\SourceTreeProjects\Document-Flow\DAL\bin\Debug\EntityModels.dll
+D:\SourceTreeProjects\Document-Flow\DAL\bin\Debug\EntityModels.pdb
+D:\SourceTreeProjects\Document-Flow\DAL\bin\Debug\EntityFramework.xml
+D:\SourceTreeProjects\Document-Flow\DAL\bin\Debug\EntityFramework.SqlServer.xml
+D:\SourceTreeProjects\Document-Flow\DAL\bin\Debug\ru\EntityFramework.resources.dll
+D:\SourceTreeProjects\Document-Flow\DAL\bin\Debug\ru\EntityFramework.SqlServer.resources.dll
+D:\SourceTreeProjects\Document-Flow\DAL\obj\Debug\DAL.csprojResolveAssemblyReference.cache
+D:\SourceTreeProjects\Document-Flow\DAL\obj\Debug\DAL.dll
+D:\SourceTreeProjects\Document-Flow\DAL\obj\Debug\DAL.pdb

@@ -11,24 +11,28 @@
     <title>Вход</title>
 </head>
 <body class="login-html">
-    <div class="login-wrapper">
-        <div class="login-header"><h1>Вход</h1></div>
-        <div class="login-form">
-            @using (Html.BeginForm())
-            {
-                @Html.AntiForgeryToken()
-                {
-                    @Html.ValidationSummary(false)
-                    {
-                        <span>Логин :</span>@Html.EditorFor(x => x.Login)
-                        <br>
-                        <span>Пароль :</span>@Html.EditorFor(x => x.Password)
-                        <br>
-                        @Html.ActionLink("Зарегистрироваться", "Register")
-                    }
-                }
-                <input class="button" type="submit" value="Войти">
-            }
-        </div>
+<div class="login-wrapper">
+    <div class="login-header">
+        <h1>Вход</h1>
     </div>
+    <div class="login-form">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            {
+                @Html.ValidationSummary(false)
+                {
+                    <span>Логин :</span>
+                    @Html.EditorFor(x => x.Login)
+                    <br>
+                    <span>Пароль :</span>
+                    @Html.EditorFor(x => x.Password)
+                    <br>
+                    @Html.ActionLink("Зарегистрироваться", "Register")
+                }
+            }
+            <input class="button" type="submit" value="Войти">
+        }
+    </div>
+</div>
 </body>

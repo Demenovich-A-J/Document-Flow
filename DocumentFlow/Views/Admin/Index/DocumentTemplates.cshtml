@@ -9,10 +9,10 @@
             <h1>Шаблоны документов</h1>
         </div>
         <div class="middle">
-            @Html.ActionLink(" ", "CreateTemplate", "Admin", new { @class = "add-new-entry" })
+            @Html.ActionLink(" ", "CreateTemplate", "Admin", new {@class = "add-new-entry"})
             <br>
             <div class="middle">
-                <table style="width: 40%; margin-bottom: 20px;">
+                <table style="margin-bottom: 20px; width: 40%;">
                     @if (Model != null && Model.Count() != 0)
                     {
                         <thead>
@@ -29,8 +29,8 @@
                                 <td>@item.Name</td>
                                 <td>@item.TypeId</td>
                                 <td class="action-buttons">
-                                    @Html.ActionLink(" ", "EditTemplate", "Admin", new { id = item.Id }, new {@class = "edit-button"})
-                                    @Html.ActionLink(" ", "RemoveTemplate", new { id = item.Id }, new { @class = "remove-button" })
+                                    @Html.ActionLink(" ", "EditTemplate", "Admin", new {id = item.Id}, new {@class = "edit-button"})
+                                    @Html.ActionLink(" ", "RemoveTemplate", new {id = item.Id}, new {@class = "remove-button"})
                                 </td>
                             </tr>
                             </tbody>

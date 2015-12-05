@@ -24,9 +24,9 @@
                 <a class="button" href="#" onclick="addPosition()">Add</a>
             </div>
             <div id="way" class="way-show">
-                <span style="width: 30px; font-weight: 600;">№</span>
-                <span style=" font-weight: 600;">Должность</span>
-                <span style=" font-weight: 600;">Действие</span>
+                <span style="font-weight: 600; width: 30px;">№</span>
+                <span style="font-weight: 600;">Должность</span>
+                <span style="font-weight: 600;">Действие</span>
             </div>
         </div>
         @using (Html.BeginForm())
@@ -36,10 +36,10 @@
             Model.Name = "Default";
             Model.TypeId = 1;
 
-            @Html.EditorFor(model => model.Text, new { htmlAttributes = new { @id = "edit", autofocus = "", name = "form" } })
+            @Html.EditorFor(model => model.Text, new {htmlAttributes = new {@id = "edit", autofocus = "", name = "form"}})
 
             <input class="button" name="submit" type="submit" value="Добавить">
-            <input id="preview" type="button" value="Предварительный просмотр" />
+            <input id="preview" type="button" value="Предварительный просмотр"/>
         }
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -77,19 +77,19 @@
 
         <!-- Initialize the editor. -->
         <script>
-            $("#preview").click(function (stringId) {
+            $("#preview").click(function(stringId) {
                 $.ajax({
                     type: "POST",
                     url: '@Url.Action("Convert", "Document")',
                     data: stringId,
-                    success: function (data) {
+                    success: function(data) {
                         $("#preview").html(data);
                     }
                 });
             });
 
 
-            $(function () {
+            $(function() {
                 $.FroalaEditor.DefineIcon('my_dropdown', { NAME: 'cog' });
                 $.FroalaEditor.RegisterCommand('my_dropdown', {
                     title: 'Advanced options',
@@ -100,20 +100,19 @@
                     options: {
                         "#Текст": "Текст",
                         "#ФИО": "ФИО",
-                        "#Дата" : "Дата",
+                        "#Дата": "Дата",
                         "#Время": "Время",
-                        "#БольшойТекс" : "Большой Текст",
+                        "#БольшойТекс": "Большой Текст",
                         @{
-                                foreach (var position in positions)
-                                {
-                                    @Html.Raw("\'#" + @position.Name + "\'" + ":" + "\'" + @position.Name + "\',\n")
-                                }
+                            foreach (var position in positions)
+                            {
+                                @Html.Raw("\'#" + @position.Name + "\'" + ":" + "\'" + @position.Name + "\',\n")
                             }
-
+                        }
 
 
                     },
-                    callback: function (cmd, val) {
+                    callback: function(cmd, val) {
                         this.html.insert(val);
                     }
                 });
@@ -152,7 +151,7 @@
                 });
             });
 
-            var positions = {}
+            var positions = {};
             var i = 0;
 
             function addPosition() {
@@ -177,7 +176,7 @@
 
             function removePosition(name) {
                 var d = 1;
-                var newPositions = {}
+                var newPositions = {};
                 var res = "";
                 for (var key in positions) {
                     if (positions.hasOwnProperty(key) && key !== name) {
@@ -204,5 +203,3 @@
         <h1>© Copyright 2015. All rights reserved by Demen_off</h1>
     </div>
 </div>
-
-

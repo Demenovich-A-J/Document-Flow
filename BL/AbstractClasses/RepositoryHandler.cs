@@ -1,10 +1,8 @@
-﻿using BL.Interfaces;
-using DAL.AbstractRepository;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using BL.Interfaces;
+using DAL.AbstractRepository;
 
 namespace BL.AbstractClasses
 {
@@ -40,7 +38,7 @@ namespace BL.AbstractClasses
 
         public async Task<T> FindById(int id)
         {
-           return await _repository.FindById(id);
+            return await _repository.FindById(id);
         }
     }
 }

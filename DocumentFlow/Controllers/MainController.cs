@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using DocumentFlow.Models;
+﻿using System.Web.Mvc;
 using BL.AbstractClasses;
 using BL.DocumentTypeHandlers;
+using EntityModels;
 
 namespace DocumentFlow.Controllers
 {
     public class MainController : Controller
     {
-        protected static RepositoryHandler<EntityModels.DocumentType> _documentTypesHandler =
+        protected static RepositoryHandler<DocumentType> _documentTypesHandler =
             new DocumentTypesRepositoryHandler();
+
         // GET: Main
         public ActionResult Index()
         {

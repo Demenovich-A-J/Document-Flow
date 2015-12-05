@@ -1,14 +1,11 @@
-﻿using BL.AbstractClasses;
+﻿using System;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using BL.AbstractClasses;
 using BL.RolesHandlers;
 using BL.UsersHandlers;
 using EntityModels;
-using Ninject;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Web;
-using System.Web.Security;
 
 namespace DocumentFlow.Models
 {
@@ -19,6 +16,28 @@ namespace DocumentFlow.Models
         protected HttpContext _httpContext = HttpContext.Current;
 
         protected RepositoryHandler<User> _usersRepository = new UsersRepositoryHandler();
+
+
+        public User Register(RegisterModel registerModel)
+        {
+            if (_usersRepository.GetAll(user => user.UserName == registerModel.Login).Count() == 0)
+            {
+                _usersRepository.Add(new User
+                {
+                    FirstName = registerModel.FirstName,
+                    LastName = registerModel.LastName,
+                    Patronymic = registerModel.Patronymic,
+                    UserName = registerModel.Login,
+                    PositionId = registerModel.PositionId,
+                    Password = registerModel.Password,
+                    Email = registerModel.Email,
+                    RoleId = 2 //user
+                });
+
+                return _usersRepository.GetAll(user => user.UserName == registerModel.Login).First();
+            }
+            return null;
+        }
 
         #region IAuthentication Members
 
@@ -43,13 +62,13 @@ namespace DocumentFlow.Models
         private void CreateCookie(string userName, bool isPersistent = false)
         {
             var ticket = new FormsAuthenticationTicket(
-                  1,
-                  userName,
-                  DateTime.Now,
-                  DateTime.Now.Add(FormsAuthentication.Timeout),
-                  isPersistent,
-                  string.Empty,
-                  FormsAuthentication.FormsCookiePath);
+                1,
+                userName,
+                DateTime.Now,
+                DateTime.Now.Add(FormsAuthentication.Timeout),
+                isPersistent,
+                string.Empty,
+                FormsAuthentication.FormsCookiePath);
 
             var encTicket = FormsAuthentication.Encrypt(ticket);
 
@@ -75,7 +94,7 @@ namespace DocumentFlow.Models
         {
             get
             {
-                HttpCookie authCookie = _httpContext.Response.Cookies.Get(_cookieName);
+                var authCookie = _httpContext.Response.Cookies.Get(_cookieName);
                 if (authCookie != null && !string.IsNullOrEmpty(authCookie.Value))
                 {
                     var ticket = FormsAuthentication.Decrypt(authCookie.Value);
@@ -84,28 +103,7 @@ namespace DocumentFlow.Models
                 return new UserProvider(null, null, null);
             }
         }
+
         #endregion
-
-
-        public User Register(RegisterModel registerModel)
-        {
-            if(_usersRepository.GetAll(user => user.UserName == registerModel.Login).Count() == 0)
-            {
-                _usersRepository.Add(new User()
-                {
-                    FirstName = registerModel.FirstName,
-                    LastName = registerModel.LastName,
-                    Patronymic = registerModel.Patronymic,
-                    UserName = registerModel.Login,
-                    PositionId = registerModel.PositionId,
-                    Password = registerModel.Password,
-                    Email = registerModel.Email,
-                    RoleId = 2 //user
-                });
-
-                return _usersRepository.GetAll(user => user.UserName == registerModel.Login).First();
-            }
-            return null;
-        }
     }
 }
