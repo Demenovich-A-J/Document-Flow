@@ -1,0 +1,35 @@
+﻿@model EntityModels.User
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    List<SelectListItem> positions = ViewBag.Positions;
+    List<SelectListItem> roles = ViewBag.Roles;
+}
+
+<div class="main-block">
+    <div class="header">
+        <h1>Редактирование пользователя</h1>
+    </div>
+    <div class="new-meta">
+        <div class="admin-login" style="padding: 40px 59px;">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div>
+                    @Html.ValidationSummary()
+                    @Html.HiddenFor( model => model.Id)
+                    <p>Логин: @Html.EditorFor(model => model.UserName)</p>
+                    <p>Имя: @Html.EditorFor(model => model.FirstName)</p>
+                    <p>Фамилия: @Html.EditorFor(model => model.LastName)</p>
+                    <p>Отчество: @Html.EditorFor(model => model.Patronymic)</p>
+                    <p>Должность: @Html.DropDownListFor(model => model.PositionId, positions)</p>
+                    <p>Email: @Html.EditorFor(model => model.Email)</p>
+                    <p>Пароль: @Html.EditorFor(model => model.Password)</p>
+                    <p>Роль: @Html.DropDownListFor(model => model.RoleId, roles)</p>
+                    <p><input type="submit" value="Изменить" /></p>
+                </div>
+            } 
+        </div>
+    </div>
+</div>
+
