@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using BL.AbstractClasses;
 using BL.DocumentHandler;
+using BL.DocumentHandlers;
 using BL.DocumentTemplatesHandlers;
 using BL.DocumentTypeHandlers;
 using BL.PositionsHandler;
@@ -13,6 +14,25 @@ namespace DocumentFlow.Controllers
 {
     public class AdminController : Controller
     {
+        protected HtmlDocumentHandler DocumentHandler;
+
+        public AdminController()
+        {
+            DocumentHandler = new HtmlDocumentHandler(AccountController.FullName);
+        }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult ConvertView(DocumentTemplate template)
+        {
+            if (template.Text != null)
+            {
+                template = DocumentHandler.ConvertView(template);
+            }
+
+            return View("Preview/Preview",template);
+        }
+
         #region User
 
         public ActionResult Users()

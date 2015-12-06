@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
-using BL.DocumentFandler;
+using BL.DocumentHandlers;
+using EntityModels;
 
 namespace DocumentFlow.Controllers
 {
@@ -12,11 +13,11 @@ namespace DocumentFlow.Controllers
             _documentHandler = new HtmlDocumentHandler(AccountController.FullName);
         }
 
-        [HttpGet]
+        [HttpPost]
         [ValidateInput(false)]
-        public ActionResult ConvertView(int id)
+        public ActionResult ConvertView(DocumentTemplate template)
         {
-            var template = _documentHandler.ConvertView(id);
+            template = _documentHandler.ConvertView(template);
             return View(template);
         }
     }

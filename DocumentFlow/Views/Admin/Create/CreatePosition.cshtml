@@ -3,18 +3,24 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Добавление должности</h2>
-<div class="new-meta">
-    <div class="admin-login" style="padding: 40px 59px;">
-        @using (Html.BeginForm())
-        {
-            @Html.AntiForgeryToken()
-            @Html.ValidationSummary()
+<div class="main-block">
+    <div class="main-blcok-wrapper">
+        <div class="header">
+            <h1>Добавление должности</h1>
+        </div>
+        <div class="new-meta">
+            <div class="admin-login" style="padding: 40px 59px;">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary()
 
-            <span style="width: 155px;">Название должности: </span>
-            @Html.EditorFor(model => model.Name)
-            <br>
-            <input class="button" name="submit" type="submit" value="Добавить">
-        }
+                    <span style="width: 155px;">Название должности: </span>
+                    @Html.EditorFor(model => model.Name)
+                    <br>
+                    <input class="button" name="submit" type="submit" value="Добавить">
+                }
+            </div>
+        </div>
     </div>
 </div>

@@ -5,43 +5,42 @@
  */
 
 .clearfix::after {
-    clear: both;
-    content: "";
-    display: block;
+  clear: both;
+  display: block;
+  content: "";
 }
-
 .fr-box .fr-counter {
-    -moz-background-clip: padding;
-    -moz-border-radius: 2px 0 0 0;
-    -webkit-background-clip: padding-box;
-    -webkit-border-radius: 2px 0 0 0;
-    background: #ffffff;
-    background-clip: padding-box;
-    border-left: solid 1px #ebebeb;
-    border-radius: 2px 0 0 0;
-    border-top: solid 1px #ebebeb;
-    bottom: 0px;
-    color: #cccccc;
-    content: attr(data-chars);
-    font-family: "Times New Roman", Georgia, Serif;
-    font-size: 15px;
-    padding: 5px;
-    position: absolute;
-    right: 0px;
-    z-index: 1;
+  position: absolute;
+  bottom: 0px;
+  padding: 5px;
+  right: 0px;
+  color: #cccccc;
+  content: attr(data-chars);
+  font-size: 15px;
+  font-family: "Times New Roman", Georgia, Serif;
+  z-index: 1;
+  background: #ffffff;
+  border-top: solid 1px #ebebeb;
+  border-left: solid 1px #ebebeb;
+  border-radius: 2px 0 0 0;
+  -moz-border-radius: 2px 0 0 0;
+  -webkit-border-radius: 2px 0 0 0;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
 }
-
 .fr-box.fr-rtl .fr-counter {
-    -moz-background-clip: padding;
-    -moz-border-radius: 0 2px 0 0;
-    -webkit-background-clip: padding-box;
-    -webkit-border-radius: 0 2px 0 0;
-    background-clip: padding-box;
-    border-left: none;
-    border-radius: 0 2px 0 0;
-    border-right: solid 1px #ebebeb;
-    left: 0px;
-    right: auto;
+  left: 0px;
+  right: auto;
+  border-left: none;
+  border-right: solid 1px #ebebeb;
+  border-radius: 0 2px 0 0;
+  -moz-border-radius: 0 2px 0 0;
+  -webkit-border-radius: 0 2px 0 0;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
 }
-
-.fr-box.fr-code-view .fr-counter { display: none; }
+.fr-box.fr-code-view .fr-counter {
+  display: none;
+}

@@ -18,9 +18,9 @@ address, caption, cite, code, dfn, em, strong, th, var {
 }
 
 ol, ul {
-    color: #e23d3d;
     list-style: none;
     padding-left: 22%;
+    color: #e23d3d;
 }
 
 caption, th { text-align: left; }
@@ -54,139 +54,140 @@ legend { color: #000; }
 #yui3-css-stamp.cssreset { display: none; }
 
 html, body {
-    font-family: 'PT Sans', sans-serif;
     height: 100%;
+    font-family: 'PT Sans', sans-serif;
 }
 
 .wrapper {
+    height: 100%;
     -moz-min-width: 1024px;
     -ms-min-width: 1024px;
     -o-min-width: 1024px;
     -webkit-min-width: 1024px;
-    height: 100%;
-    margin: 0 auto;
     min-width: 1024px;
     width: 60%;
+    margin: 0 auto;
 }
 
 
 /***********Main-block************/
-
 .left-sidebar {
-    background: #41546a;
-    display: inline-block;
     float: left;
-    height: 100%;
+    display: inline-block;
+    background: #41546a;
     width: 15%;
+    height: 100%;
 }
 
 .left-sidebar h1 {
-    -webkit-border-radius: 0px 20px 0px 20px;
     background-color: #0aa863;
-    color: #fff;
     padding: 10px 20px;
     text-align: center;
+    color: #fff;
+    -webkit-border-radius: 0px 20px 0px 20px;
 }
 
 .left-sidebar .menu {
-    list-style: none;
     margin: 0;
     padding: 0;
+    list-style: none;
 }
 
-.left-sidebar .menu-item:hover { cursor: pointer; }
+.left-sidebar .menu-item:hover {
+    cursor: pointer;
+}
 
 .left-sidebar .menu .menu-item:hover .submenu {
+    display: inline-block;
+    width: 9%;
     -moz-min-width: 154px;
     -ms-min-width: 154px;
     -o-min-width: 154px;
     -webkit-min-width: 154px;
-    display: inline-block;
     min-width: 154px;
-    width: 9%;
 }
 
 .left-sidebar .menu .submenu {
     display: none;
-    list-style: none;
+    position: absolute;
     margin: 0;
     padding: 0;
-    position: absolute;
+    list-style: none;
 }
 
-.left-sidebar .submenu-item:hover a {
+.left-sidebar .submenu-item:hover a{
+    -webkit-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
     -moz-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
     -ms-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
     -o-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
-    -webkit-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
+    transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
     background-color: #0aa863;
     color: #fff;
-    transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
 }
 
 .left-sidebar .submenu-item a {
+    color: #fff;
+    display: inline-block;
+    width: 100%;
+    height: 30px;
+    text-align: center;
+    text-decoration: none;
+    -webkit-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
     -moz-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
     -ms-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
     -o-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
-    -webkit-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
+    transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
     border-bottom: 1px solid #0aa863;
     border-top: 1px solid #0aa863;
-    color: #fff;
-    display: inline-block;
-    height: 30px;
     line-height: 30px;
     margin-top: 5px;
-    text-align: center;
-    text-decoration: none;
-    transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
-    width: 100%;
 }
 
 nav {
-    color: #fff;
     margin: 100% auto 0;
+    color: #fff;
 }
 
 nav a {
+    color: #fff;
+    display: inline-block;
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    text-decoration: none;
+    -webkit-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
     -moz-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
     -ms-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
     -o-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
-    -webkit-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
+    transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
     border-bottom: 2px solid #0aa863;
     border-top: 2px solid #0aa863;
-    color: #fff;
-    display: inline-block;
-    height: 50px;
     line-height: 50px;
     margin-top: 10px;
-    text-align: center;
-    text-decoration: none;
-    transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
-    width: 100%;
 }
 
 nav a:hover {
+    -webkit-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
     -moz-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
     -ms-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
     -o-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
-    -webkit-transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
+    transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
     background-color: #0aa863;
     color: #fff;
-    transition: border .3s ease-in-out, color .3s ease-in-out, background-color .3s ease-in-out;
 }
 
 .main-block {
-    background-color: #fff;
     display: inline-block;
     float: right;
     height: 100%;
     width: 85%;
+    background-color: #fff;
 }
 
 .header {
-    background-color: #f2f2f2;
-    height: 100px;
     width: 100%;
+    height: 100px;
+    background-color: #f2f2f2;
 }
 
 
@@ -195,10 +196,10 @@ nav a:hover {
 /******Login-block*****/
 
 .login-header {
-    -ms-border-radius: 3px;
-    background-color: #0aa863;
-    border-radius: 3px;
     height: 60px;
+    background-color: #0aa863;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
     line-height: 60px;
 }
 
@@ -208,10 +209,10 @@ nav a:hover {
 }
 
 .login-header h1 {
+    padding-left: 65px;
     color: #fff;
     font-size: 20px;
     font-weight: bold;
-    padding-left: 65px;
 }
 
 .login-form {
@@ -221,20 +222,20 @@ nav a:hover {
 }
 
 .login-form input {
-    -ms-border-radius: 3px;
-    background-color: #fff;
-    border: solid 1px #ddd;
-    border-radius: 3px;
     margin-top: 20px;
     padding: 10px 12px;
+    background-color: #fff;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
+    border: solid 1px #ddd;
     width: auto !important;
 }
 
 .login-form span {
+    font-size: 16px;
     color: #666;
     display: inline-block;
-    font-size: 16px;
-    width: 100px;
+    width: 99px;
 }
 
 .login-wrapper {
@@ -243,150 +244,150 @@ nav a:hover {
 }
 
 .login-form .button {
-    -moz-transition: 0.2s;
+    border: none;
+    color: white;
+    text-decoration: none;
+    padding: 10px 18px;
     -ms-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-transition: 0.2s;
+    -moz-transition: 0.2s;
     -ms-transition: 0.2s;
     -o-transition: 0.2s;
-    -webkit-transition: 0.2s;
-    background-color: #0aa863;
-    border: none;
-    border-radius: 3px;
-    color: white;
-    float: right;
-    font-size: 16px;
-    margin-top: 20px;
-    padding: 10px 18px;
-    text-decoration: none;
     transition: 0.2s;
+    float: right;
+    margin-top: 20px;
+    background-color: #0aa863;
+    font-size: 16px;
 }
 
 .login-form .button:hover {
-    background: #0bc071;
     cursor: pointer;
+    background: #0bc071;
 }
 
 .login-html {
-    background-color: #41546a;
     height: auto;
+    background-color: #41546a;
 }
 
 
 /******Registration-block*****/
 
 .reg-header {
-    -ms-border-radius: 3px;
-    background-color: #0aa863;
-    border-radius: 3px;
     height: 60px;
+    background-color: #0aa863;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
     line-height: 60px;
 }
 
 .reg-header h1 {
+    padding-left: 65px;
     color: #fff;
     font-size: 20px;
     font-weight: bold;
-    padding-left: 65px;
 }
 
 .reg-form {
     background-color: #fff;
     display: inline-block;
-    padding-bottom: 20px;
     width: 100%;
+    padding-bottom: 20px;
 }
 
 .reg-form input {
-    -ms-border-radius: 3px;
-    background-color: #fff;
-    border: solid 1px #ddd;
-    border-radius: 3px;
     margin-top: 20px;
     padding: 10px 12px;
+    background-color: #fff;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
+    border: solid 1px #ddd;
     width: 55% !important;
 }
 
 .reg-form select {
-    -ms-border-radius: 3px;
-    background-color: #fff;
-    border: solid 1px #ddd;
-    border-radius: 3px;
     margin-top: 20px;
-    max-width: 337px;
     padding: 10px 12px;
+    background-color: #fff;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
+    border: solid 1px #ddd;
     width: 54.5%;
+    max-width: 337px;
 }
 
 .reg-form span {
+    font-size: 16px;
     color: #666;
     display: inline-block;
-    font-size: 16px;
-    margin-left: 10px;
-    margin-right: 20px;
-    text-align: right;
     width: 160px;
+    text-align: right;
+    margin-right: 20px;
+    margin-left: 10px;
 }
 
 .reg-wrapper {
+    margin: 0 auto;
+    width: 30%;
     -moz-min-width: 576px;
     -ms-min-width: 576px;
     -o-min-width: 576px;
     -webkit-min-width: 576px;
-    margin: 0 auto;
     min-width: 576px;
-    width: 30%;
 }
 
 .reg-form .button {
-    -moz-transition: 0.2s;
+    border: none;
+    color: white;
+    text-decoration: none;
+    padding: 10px 18px;
     -ms-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-transition: 0.2s;
+    -moz-transition: 0.2s;
     -ms-transition: 0.2s;
     -o-transition: 0.2s;
-    -webkit-transition: 0.2s;
+    transition: 0.2s;
+    margin-top: 20px;
     background-color: #0aa863;
-    border: none;
-    border-radius: 3px;
-    color: white;
     font-size: 16px;
     margin-left: 33%;
-    margin-top: 20px;
-    padding: 10px 18px;
-    text-decoration: none;
-    transition: 0.2s;
     width: auto !important;
 }
 
 .reg-form .button:hover {
-    background: #0bc071;
     cursor: pointer;
+    background: #0bc071;
 }
 
 .reg-html {
-    background-color: #41546a;
     height: auto;
+    background-color: #41546a;
 }
 
 /*********Poup-up-block***********/
 
 .b-popup {
+    width:100%;
+    min-height:100%;
     background-color: #000000;
-    background-color: rgba(0, 0, 0, 0.5);
-    min-height: 100%;
-    overflow: hidden;
-    position: fixed;
-    top: 0px;
-    width: 100%;
+    background-color: rgba(0,0,0,0.5);
+    overflow:hidden;
+    position:fixed;
+    top:0px;
 }
 
 .b-popup .b-popup-content {
-    -ms-border-radius: 5px;
-    -ms-box-shadow: 0px 0px 10px #000;
-    -webkit-box-shadow: 0px 0px 10px #000;
+    margin:40px auto 0px auto;
+    width:10%;
+    padding:10px;
     background-color: #c5c5c5;
-    border-radius: 5px;
+    -ms-border-radius:5px;
+    border-radius:5px;
+    -webkit-box-shadow: 0px 0px 10px #000;
+    -ms-box-shadow: 0px 0px 10px #000;
     box-shadow: 0px 0px 10px #000;
-    margin: 40px auto 0px auto;
-    padding: 10px;
-    width: 10%;
 }
 
 /*********Poup-up-block***********/
@@ -394,19 +395,20 @@ nav a:hover {
 
 @media only screen and (max-width: 1600px) {
     .wrapper {
+        width: 80%;
         -moz-min-width: 1024px;
         -ms-min-width: 1024px;
         -o-min-width: 1024px;
         -webkit-min-width: 1024px;
         min-width: 1024px;
-        width: 80%;
     }
 
-    .left-sidebar .menu .menu-item:hover .submenu { width: 12%; }
-
+    .left-sidebar .menu .menu-item:hover .submenu {
+        width: 12%;
+    }
     .b-popup .b-popup-content {
-        max-width: 363px;
         width: 21.5%;
+        max-width: 363px;
     }
 }
 
@@ -416,15 +418,16 @@ nav a:hover {
         -ms-min-width: 1024px;
         -o-min-width: 1024px;
         -webkit-min-width: 1024px;
-        margin: 0;
         min-width: 1024px;
         width: 100%;
+        margin: 0;
     }
 
-    .left-sidebar .menu .menu-item:hover .submenu { width: 15%; }
-
+    .left-sidebar .menu .menu-item:hover .submenu {
+        width: 15%;
+    }
     .b-popup .b-popup-content {
-        max-width: 363px;
         width: 32%;
+        max-width: 363px;
     }
 }

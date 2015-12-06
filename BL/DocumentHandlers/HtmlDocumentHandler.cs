@@ -1,66 +1,51 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using DAL.AbstractRepository;
 using DAL.Repositories;
 using EntityModels;
 
-namespace BL.DocumentFandler
+namespace BL.DocumentHandlers
 {
     public class HtmlDocumentHandler
     {
-        protected string _fullUserName;
-        protected DataRepository<Position> _positionsRepository;
-        protected DataRepository<DocumentTemplate> _templatesRepository;
-        protected DataRepository<User> _usersRepository;
-
+        protected string FullUserName;
+        protected DataRepository<Position> PositionsRepository;
+        protected DataRepository<DocumentTemplate> TemplatesRepository;
+        protected DataRepository<User> UsersRepository;
+        protected Regex ReplaceRegex = new Regex(@"#(\w+)",RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
         public HtmlDocumentHandler(string fullUserName)
         {
-            _usersRepository = new UsersRepository();
-            _positionsRepository = new PositionsRepository();
-            _templatesRepository = new DocumentTemplatesRepository();
-
-            _fullUserName = fullUserName;
+            UsersRepository = new UsersRepository();
+            PositionsRepository = new PositionsRepository();
+            TemplatesRepository = new DocumentTemplatesRepository();
+            FullUserName = fullUserName;
         }
 
-        public async Task<DocumentTemplate> ConvertView(int id)
+        public DocumentTemplate ConvertView(DocumentTemplate template)
         {
-            var template = await _templatesRepository.FindById(id);
             template.Text = ReplaceBy(template.Text, BuildDictionary());
             return template;
         }
 
         protected string ReplaceBy(string text, Dictionary<string, string> dictionary)
         {
-            var pattern = @"#(\w+)";
 
-            var matchCollection =
-                Regex.Matches(text, pattern, RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
+            var matchCollection = ReplaceRegex.Matches(text);
 
-            if (matchCollection.Count != 0)
-            {
-                foreach (var match in matchCollection)
-                {
-                    if (dictionary.ContainsKey(match.ToString()))
-                    {
-                        text = text.Replace(match.ToString(), dictionary[match.ToString()]);
-                    }
-                }
-            }
-
-            return text;
+            return matchCollection.Count == 0 ? text : matchCollection.Cast<object>().Where(match => dictionary.ContainsKey(match.ToString())).Aggregate(text, (current, match) => current.Replace(match.ToString(), dictionary[match.ToString()]));
         }
 
         protected Dictionary<string, string> BuildDictionary()
         {
-            var positions = _positionsRepository.GetAll(x => true);
+            var positions = PositionsRepository.GetAll(x => true);
 
             var dictionary = new Dictionary<string, string>
             {
                 {"#БольшойТекст", "<textarea></textarea>"},
                 {"#Текст", "<input type='text'></input>"},
-                {"#ФИО", _fullUserName},
+                {"#ФИО", FullUserName},
                 {"#Дата", "<input type='date'></input>"},
                 {"#Время", "<input type='time'></input>"}
             };
@@ -80,7 +65,7 @@ namespace BL.DocumentFandler
 
         protected string OptionsHtml(int id)
         {
-            var users = _usersRepository.GetAll(x => x.PositionId == id);
+            var users = UsersRepository.GetAll(x => x.PositionId == id);
 
             var optionsString = new StringBuilder();
             foreach (var user in users)
