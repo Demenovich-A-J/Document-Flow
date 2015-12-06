@@ -42,7 +42,7 @@
             
             @Html.AntiForgeryToken()
             
-            @Html.HiddenFor(model => model.PositionsPass,new {@id = "pass"})
+            @Html.HiddenFor(model => model.PositionsPath,new {@id = "pass"})
             @Html.EditorFor(model => model.Text, new {htmlAttributes = new {@id = "edit", autofocus = "", name = "form"}})
             @Html.DropDownListFor(model => model.TypeId, types)
 

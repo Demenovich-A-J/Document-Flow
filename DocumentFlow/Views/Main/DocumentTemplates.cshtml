@@ -3,13 +3,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<table style="margin-bottom: 20px; width: 40%;">
+<table style="margin-bottom: 20px; width: 70%;">
     @if (Model != null && Model.Count() != 0)
     {
         <thead>
         <tr>
             <th>Название</th>
-            <th></th>
+            <th>Действие</th>
         </tr>
         </thead>
         foreach (var item in Model.AsEnumerable())

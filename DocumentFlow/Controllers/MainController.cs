@@ -4,17 +4,17 @@ using BL.DocumentTypeHandlers;
 using EntityModels;
 using BL.DocumentTemplatesHandlers;
 using System.Threading.Tasks;
-using BL.DocumentFandler;
+using BL.DocumentHandlers;
 
 
 namespace DocumentFlow.Controllers
 {
     public class MainController : Controller
     {
-        protected static RepositoryHandler<DocumentTemplate> _templatesHandler =
+        protected static RepositoryHandler<DocumentTemplate> TemplatesHandler =
             new DocumentTemplatesRepositoryHandler();
 
-        protected static HtmlDocumentHandler _documentConverter = 
+        protected static HtmlDocumentHandler DocumentConverter = 
             new HtmlDocumentHandler(AccountController.FullName);
 
         // GET: Main
@@ -25,22 +25,15 @@ namespace DocumentFlow.Controllers
 
         public ActionResult DocumentTemplates()
         {
-            var templates = _templatesHandler.GetAll(x => true);
+            var templates = TemplatesHandler.GetAll(x => true);
 
             return View(templates);
         }
 
-        public async Task<ActionResult> FillDocument(int id)
-        {
-            var template = await _templatesHandler.FindById(id);
-            template = await _documentConverter.ConvertView(template);
-            return View(template);
-        }
-
-        [HttpPost]
         public ActionResult FillDocument(DocumentTemplate template)
         {
-            return View();
+            template = DocumentConverter.ConvertView(template);
+            return View(template);
         }
     }
 }

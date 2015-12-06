@@ -2,20 +2,20 @@
 using System.Web.Mvc;
 using BL.AbstractClasses;
 using BL.DocumentHandler;
-using BL.DocumentTemplatesHandlers;
+using BL.DocumentHandlers;
 using BL.DocumentTypeHandlers;
 using BL.PositionsHandler;
 using BL.RolesHandlers;
 using BL.UsersHandlers;
 using EntityModels;
-using BL.DocumentFandler;
+using BL.DocumentTemplatesHandlers;
+
 namespace DocumentFlow.Controllers
 {
     public class AdminController : Controller
     {
-        
         #region Handlers
-
+        
         protected HtmlDocumentHandler DocumentHandler;
 
         protected static RepositoryHandler<DocumentTemplate> _templatesHandler =
@@ -23,8 +23,6 @@ namespace DocumentFlow.Controllers
 
         protected static RepositoryHandler<Position> _positionsHandler =
             new PositionsRepositoryHandler();
-
-        protected static PositionsHandler positionsHandler = new PositionsHandler();
 
         protected static RepositoryHandler<DocumentType> _documentTypesHandler =
             new DocumentTypesRepositoryHandler();
@@ -34,8 +32,6 @@ namespace DocumentFlow.Controllers
 
         protected static RepositoryHandler<Role> _rolesHandler =
             new RolesRepositoryHandler();
-
-        protected static RolesHandler rolesHandler = new RolesHandler();
 
         protected static RepositoryHandler<User> _usersHandler =
             new UsersRepositoryHandler();
@@ -52,67 +48,25 @@ namespace DocumentFlow.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public async Task<ActionResult> ConvertView(DocumentTemplate template)
+        public ActionResult ConvertView(DocumentTemplate template)
         {
             if (template.Text != null)
             {
-                template = await DocumentHandler.ConvertView(template);
+                template = DocumentHandler.ConvertView(template);
             }
 
-            return View("Preview/Preview", template);
+            return View("Preview/Preview",template);
         }
 
         #region User
 
         public ActionResult Users()
         {
-            @ViewBag.Positions = _positionsHandler.GetAll(x => true);
-            @ViewBag.Roles = _rolesHandler.GetAll(x => true);
             return View("Index/Users", _usersHandler.GetAll(x => true));
         }
 
-        public async Task<ActionResult> EditUser(int id)
-        {
-            ViewBag.Positions = positionsHandler.PositionsSelectList();
-            ViewBag.Roles = rolesHandler.RolesSelectList();
-
-            if (ModelState.IsValid)
-            {
-                var user = await _usersHandler.FindById(id);
-
-                if (user != null)
-                {
-                    return View("Edit/EditUser", user);
-                }
-            }
-            return RedirectToAction("Users");
-        }
-
-        [HttpPost]
-        public ActionResult EditUser(User user)
-        {
-            ViewBag.Positions = positionsHandler.PositionsSelectList();
-            ViewBag.Roles = rolesHandler.RolesSelectList();
-
-            if (ModelState.IsValid)
-            {
-                _usersHandler.Update(user);
-            }
-            return RedirectToAction("Users");
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> DeleteUser(int id)
-        {
-            var role = await _usersHandler.FindById(id);
-
-            if (role != null)
-            {
-                _usersHandler.Remove(role);
-            }
-            return RedirectToAction("Users");
-        }
         #endregion
+
 
         #region Template
 
@@ -125,8 +79,7 @@ namespace DocumentFlow.Controllers
         [HttpGet]
         public ActionResult CreateTemplate()
         {
-            var positions = _positionsHandler.GetAll(x => true);
-            ViewBag.Positions = positions;
+            ViewBag.Positions = _positionsHandler.GetAll(x => true);
 
             var t = _typesHtmlHandler.TypesSelectList();
             ViewBag.Types = _typesHtmlHandler.TypesSelectList();
@@ -138,6 +91,7 @@ namespace DocumentFlow.Controllers
         [ValidateInput(false)]
         public ActionResult CreateTemplate(DocumentTemplate template)
         {
+            template.TypeId = 1;
             _templatesHandler.Add(template);
 
             return RedirectToAction("DocumentTemplates", "Admin");
