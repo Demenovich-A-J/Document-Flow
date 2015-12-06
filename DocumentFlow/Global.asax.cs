@@ -1,16 +1,13 @@
-﻿using BL.RolesHandlers;
-using BL.UsersHandlers;
-using EntityModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using BL.RolesHandlers;
+using BL.UsersHandlers;
+using EntityModels;
 
 namespace DocumentFlow
 {
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
         protected void Application_Start()
         {
@@ -22,12 +19,12 @@ namespace DocumentFlow
 
                 //add roles user admin
                 var rolesHandler = new RolesRepositoryHandler();
-                rolesHandler.Add(new Role() { Name = "Admin" });
-                rolesHandler.Add(new Role() { Name = "User" });
+                rolesHandler.Add(new Role {Name = "Admin"});
+                rolesHandler.Add(new Role {Name = "User"});
 
                 //add admin
                 var usersHandler = new UsersRepositoryHandler();
-                usersHandler.Add(new User()
+                usersHandler.Add(new User
                 {
                     FirstName = "admin",
                     LastName = "admin",

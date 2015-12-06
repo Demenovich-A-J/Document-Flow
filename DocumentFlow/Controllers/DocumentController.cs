@@ -1,24 +1,24 @@
-﻿using System.Web.Mvc;
+﻿using System.Threading.Tasks;
+using System.Web.Mvc;
+using BL.DocumentHandlers;
 using EntityModels;
-using BL.DocumentFandler;
-using System.Threading.Tasks;
 
 namespace DocumentFlow.Controllers
 {
     public class DocumentController : Controller
     {
-        protected HtmlDocumentHandler _documentHandler;
+        protected HtmlDocumentHandler DocumentHandler;
 
         public DocumentController()
         {
-            _documentHandler = new HtmlDocumentHandler(AccountController.FullName);
+            DocumentHandler = new HtmlDocumentHandler(AccountController.FullName);
         }
 
         [HttpPost]
         [ValidateInput(false)]
         public async Task<ActionResult> ConvertView(DocumentTemplate template)
         {
-            template = await _documentHandler.ConvertView(template);
+            template = await DocumentHandler.ConvertView(template);
             return View(template);
         }
     }

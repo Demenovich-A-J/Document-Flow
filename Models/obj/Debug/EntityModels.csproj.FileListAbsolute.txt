@@ -9,3 +9,4 @@ D:\SourceTreeProjects\Document-Flow\Models\bin\Debug\ru\EntityFramework.resource
 D:\SourceTreeProjects\Document-Flow\Models\bin\Debug\ru\EntityFramework.SqlServer.resources.dll
 D:\SourceTreeProjects\Document-Flow\Models\obj\Debug\EntityModels.dll
 D:\SourceTreeProjects\Document-Flow\Models\obj\Debug\EntityModels.pdb
+D:\SourceTreeProjects\Document-Flow\Models\obj\Debug\EntityModels.csprojResolveAssemblyReference.cache

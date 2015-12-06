@@ -1,16 +1,14 @@
-﻿namespace EntityModels
+﻿using System.Data.Entity;
+
+namespace EntityModels
 {
-    using System;
-    using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
-    
-    public partial class Database : DbContext
+    public class Database : DbContext
     {
         public Database()
             : base("name=Database")
         {
         }
-    
+
         public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<DocumentTemplate> DocumentTemplates { get; set; }
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }

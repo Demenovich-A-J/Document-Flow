@@ -55,6 +55,7 @@
     <Compile Include="PositionsHandlers\PositionsHandler.cs" />
     <Compile Include="PositionsHandlers\PositionsReposiotryHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RolesHandlers\RolesHandler.cs" />
     <Compile Include="RolesHandlers\RolesRepositoryHandler.cs" />
     <Compile Include="UsersHandlers\UsersRepositoryHandler.cs" />
   </ItemGroup>

@@ -2,41 +2,47 @@
 using System.Web.Mvc;
 using BL.AbstractClasses;
 using BL.DocumentHandler;
-using BL.DocumentHandlers;
+using BL.DocumentTemplatesHandlers;
 using BL.DocumentTypeHandlers;
 using BL.PositionsHandler;
 using BL.RolesHandlers;
 using BL.UsersHandlers;
 using EntityModels;
-using BL.DocumentTemplatesHandlers;
+using BL.DocumentHandlers;
+using BL.PositionsHandlers;
 
 namespace DocumentFlow.Controllers
 {
     public class AdminController : Controller
     {
+
         #region Handlers
-        
+
         protected HtmlDocumentHandler DocumentHandler;
 
-        protected static RepositoryHandler<DocumentTemplate> _templatesHandler =
+        protected static RepositoryHandler<DocumentTemplate> TemplatesHandler =
             new DocumentTemplatesRepositoryHandler();
 
         protected static RepositoryHandler<Position> _positionsHandler =
             new PositionsRepositoryHandler();
 
-        protected static RepositoryHandler<DocumentType> _documentTypesHandler =
+        protected static PositionsHandler PositionsHandler = new PositionsHandler();
+
+        protected static RepositoryHandler<DocumentType> DocumentTypesHandler =
             new DocumentTypesRepositoryHandler();
 
-        protected static RepositoryHandler<Document> _documentsHandler =
+        protected static RepositoryHandler<Document> DocumentsHandler =
             new DocumentsRepositoryHandler();
 
-        protected static RepositoryHandler<Role> _rolesHandler =
+        protected static RepositoryHandler<Role> RolesHandler =
             new RolesRepositoryHandler();
 
-        protected static RepositoryHandler<User> _usersHandler =
+        protected static RolesHandler rolesHandler = new RolesHandler();
+
+        protected static RepositoryHandler<User> UsersHandler =
             new UsersRepositoryHandler();
 
-        protected static DocumentTypesHandler _typesHtmlHandler =
+        protected static DocumentTypesHandler TypesHtmlHandler =
             new DocumentTypesHandler();
 
         #endregion
@@ -48,41 +54,84 @@ namespace DocumentFlow.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult ConvertView(DocumentTemplate template)
+        public async Task<ActionResult> ConvertView(DocumentTemplate template)
         {
             if (template.Text != null)
             {
-                template = DocumentHandler.ConvertView(template);
+                template = await DocumentHandler.ConvertView(template);
             }
 
-            return View("Preview/Preview",template);
+            return View("Preview/Preview", template);
         }
 
         #region User
 
         public ActionResult Users()
         {
-            return View("Index/Users", _usersHandler.GetAll(x => true));
+            @ViewBag.Positions = _positionsHandler.GetAll(x => true);
+            @ViewBag.Roles = RolesHandler.GetAll(x => true);
+            return View("Index/Users", UsersHandler.GetAll(x => true));
         }
 
-        #endregion
+        public async Task<ActionResult> EditUser(int id)
+        {
+            ViewBag.Positions = PositionsHandler.PositionsSelectList();
+            ViewBag.Roles = rolesHandler.RolesSelectList();
 
+            if (ModelState.IsValid)
+            {
+                var user = await UsersHandler.FindById(id);
+
+                if (user != null)
+                {
+                    return View("Edit/EditUser", user);
+                }
+            }
+            return RedirectToAction("Users");
+        }
+
+        [HttpPost]
+        public ActionResult EditUser(User user)
+        {
+            ViewBag.Positions = PositionsHandler.PositionsSelectList();
+            ViewBag.Roles = rolesHandler.RolesSelectList();
+
+            if (ModelState.IsValid)
+            {
+                UsersHandler.Update(user);
+            }
+            return RedirectToAction("Users");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DeleteUser(int id)
+        {
+            var role = await UsersHandler.FindById(id);
+
+            if (role != null)
+            {
+                UsersHandler.Remove(role);
+            }
+            return RedirectToAction("Users");
+        }
+        #endregion
 
         #region Template
 
         public ActionResult DocumentTemplates()
         {
-            var templates = _templatesHandler.GetAll(x => true);
+            var templates = TemplatesHandler.GetAll(x => true);
             return View("Index/DocumentTemplates", templates);
         }
 
         [HttpGet]
         public ActionResult CreateTemplate()
         {
-            ViewBag.Positions = _positionsHandler.GetAll(x => true);
+            var positions = _positionsHandler.GetAll(x => true);
+            ViewBag.Positions = positions;
 
-            var t = _typesHtmlHandler.TypesSelectList();
-            ViewBag.Types = _typesHtmlHandler.TypesSelectList();
+            var t = TypesHtmlHandler.TypesSelectList();
+            ViewBag.Types = TypesHtmlHandler.TypesSelectList();
 
             return View("Create/CreateTemplate", new DocumentTemplate());
         }
@@ -91,8 +140,7 @@ namespace DocumentFlow.Controllers
         [ValidateInput(false)]
         public ActionResult CreateTemplate(DocumentTemplate template)
         {
-            template.TypeId = 1;
-            _templatesHandler.Add(template);
+            TemplatesHandler.Add(template);
 
             return RedirectToAction("DocumentTemplates", "Admin");
         }
@@ -103,7 +151,7 @@ namespace DocumentFlow.Controllers
             var positions = _positionsHandler.GetAll(x => true);
             ViewBag.Positions = positions;
 
-            var template = await _templatesHandler.FindById(id);
+            var template = await TemplatesHandler.FindById(id);
             return View("Edit/EditTemplate", template);
         }
 
@@ -111,7 +159,7 @@ namespace DocumentFlow.Controllers
         [ValidateInput(false)]
         public ActionResult EditTemplate(DocumentTemplate template)
         {
-            _templatesHandler.Update(template);
+            TemplatesHandler.Update(template);
             return RedirectToAction("DocumentTemplates", "Admin");
         }
 
@@ -119,8 +167,8 @@ namespace DocumentFlow.Controllers
         [HttpGet]
         public async Task<ActionResult> RemoveTemplate(int id)
         {
-            var template = await _templatesHandler.FindById(id);
-            _templatesHandler.Remove(template);
+            var template = await TemplatesHandler.FindById(id);
+            TemplatesHandler.Remove(template);
             return RedirectToAction("DocumentTemplates");
         }
 
@@ -130,7 +178,7 @@ namespace DocumentFlow.Controllers
 
         public ActionResult Roles()
         {
-            return View("Index/Roles", _rolesHandler.GetAll(x => true));
+            return View("Index/Roles", RolesHandler.GetAll(x => true));
         }
 
         public ActionResult CreateRole()
@@ -143,7 +191,7 @@ namespace DocumentFlow.Controllers
         {
             if (ModelState.IsValid)
             {
-                _rolesHandler.Add(role);
+                RolesHandler.Add(role);
             }
             return RedirectToAction("Roles");
         }
@@ -152,7 +200,7 @@ namespace DocumentFlow.Controllers
         {
             if (ModelState.IsValid)
             {
-                var role = await _rolesHandler.FindById(id);
+                var role = await RolesHandler.FindById(id);
 
                 if (role != null)
                 {
@@ -167,7 +215,7 @@ namespace DocumentFlow.Controllers
         {
             if (ModelState.IsValid)
             {
-                _rolesHandler.Update(role);
+                RolesHandler.Update(role);
             }
             return RedirectToAction("Roles");
         }
@@ -175,11 +223,11 @@ namespace DocumentFlow.Controllers
         [HttpGet]
         public async Task<ActionResult> DeleteRole(int id)
         {
-            var role = await _rolesHandler.FindById(id);
+            var role = await RolesHandler.FindById(id);
 
             if (role != null)
             {
-                _rolesHandler.Remove(role);
+                RolesHandler.Remove(role);
             }
             return RedirectToAction("Roles");
         }
@@ -190,7 +238,7 @@ namespace DocumentFlow.Controllers
 
         public ActionResult DocumentTypes()
         {
-            return View("Index/DocumentTypes", _documentTypesHandler.GetAll(x => true));
+            return View("Index/DocumentTypes", DocumentTypesHandler.GetAll(x => true));
         }
 
         public ActionResult CreateDocumentType()
@@ -200,14 +248,14 @@ namespace DocumentFlow.Controllers
 
         public async Task<ActionResult> EditDocumentType(int id)
         {
-            var type = await _documentTypesHandler.FindById(id);
+            var type = await DocumentTypesHandler.FindById(id);
             return View("Edit/EditDocumentType", type);
         }
 
         [HttpPost]
         public ActionResult EditDocumentType(DocumentType documentType)
         {
-            _documentTypesHandler.Update(documentType);
+            DocumentTypesHandler.Update(documentType);
             return RedirectToAction("DocumentTypes");
         }
 
@@ -216,7 +264,7 @@ namespace DocumentFlow.Controllers
         {
             if (ModelState.IsValid)
             {
-                _documentTypesHandler.Add(documentType);
+                DocumentTypesHandler.Add(documentType);
                 return RedirectToAction("DocumentTypes");
             }
             return View("Create/CreateDocumentType", documentType);
@@ -225,10 +273,10 @@ namespace DocumentFlow.Controllers
         [HttpGet]
         public async Task<ActionResult> RemoveDocumentType(int id)
         {
-            var type = await _documentTypesHandler.FindById(id);
+            var type = await DocumentTypesHandler.FindById(id);
             if (type != null)
             {
-                _documentTypesHandler.Remove(type);
+                DocumentTypesHandler.Remove(type);
             }
             return RedirectToAction("DocumentTypes");
         }

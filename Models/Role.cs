@@ -1,9 +1,6 @@
 namespace EntityModels
 {
-    using System;
-    using System.Collections.Generic;
-    
-    public partial class Role
+    public class Role
     {
         public int Id { get; set; }
         public string Name { get; set; }

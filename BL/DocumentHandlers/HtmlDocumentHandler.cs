@@ -1,30 +1,32 @@
-﻿using DAL.AbstractRepository;
-using DAL.Repositories;
-using EntityModels;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DAL.AbstractRepository;
+using DAL.Repositories;
+using EntityModels;
 
-namespace BL.DocumentFandler
+namespace BL.DocumentHandlers
 {
     public class HtmlDocumentHandler
     {
-        protected DataRepository<User> _usersRepository;
-        protected DataRepository<Position> _positionsRepository;
-        protected DataRepository<DocumentTemplate> _templatesRepository;
+        protected string FullUserName;
+        protected DataRepository<Position> PositionsRepository;
 
-        protected string _fullUserName;
+        protected Regex ReplaceRegex = new Regex(@"#(\w+)",
+            RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
+
+        protected DataRepository<DocumentTemplate> TemplatesRepository;
+        protected DataRepository<User> UsersRepository;
 
         public HtmlDocumentHandler(string fullUserName)
         {
-            _usersRepository = new UsersRepository();
-            _positionsRepository = new PositionsRepository();
-            _templatesRepository = new DocumentTemplatesRepository();
+            UsersRepository = new UsersRepository();
+            PositionsRepository = new PositionsRepository();
+            TemplatesRepository = new DocumentTemplatesRepository();
 
-            _fullUserName = fullUserName;
+            FullUserName = fullUserName;
         }
 
         public async Task<DocumentTemplate> ConvertView(DocumentTemplate template)
@@ -37,37 +39,27 @@ namespace BL.DocumentFandler
 
         protected string ReplaceBy(string text, Dictionary<string, string> dictionary)
         {
-            string pattern = @"#(\w+)";
+            var matchCollection = ReplaceRegex.Matches(text);
 
-            var matchCollection =
-                Regex.Matches(text, pattern, RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
-
-            if (matchCollection.Count != 0)
-            {
-                foreach (var match in matchCollection)
-                {
-                    if (dictionary.ContainsKey(match.ToString()))
-                    {
-                        text = text.Replace(match.ToString(), dictionary[match.ToString()]);
-                    }
-                }
-            }
-
-            return text;
+            return matchCollection.Count == 0
+                ? text
+                : matchCollection.Cast<object>()
+                    .Where(match => dictionary.ContainsKey(match.ToString()))
+                    .Aggregate(text, (current, match) => current.Replace(match.ToString(), dictionary[match.ToString()]));
         }
 
         protected async Task<Dictionary<string, string>> BuildDictionary()
         {
-            var positions = _positionsRepository.GetAll(x => true);
+            var positions = PositionsRepository.GetAll(x => true);
 
             var dictionary = new Dictionary<string, string>
-                {
-                    {"#БольшойТекст", "<textarea name='БольшойТекст'></textarea>"},
-                    {"#Текст", "<input name='Текст' type='text'></input>"},
-                    {"#ФИО", "<p name='ФИО'>" + _fullUserName + "</p>"},
-                    {"#Дата", "<input name='Дата' type='date'></input>"},
-                    {"#Время", "<input name='Время' type='time'></input>"}
-                };
+            {
+                {"#БольшойТекст", "<textarea name='БольшойТекст'></textarea>"},
+                {"#Текст", "<input name='Текст' type='text'></input>"},
+                {"#ФИО", "<p name='ФИО'>" + FullUserName + "</p>"},
+                {"#Дата", "<input name='Дата' type='date'></input>"},
+                {"#Время", "<input name='Время' type='time'></input>"}
+            };
 
             foreach (var position in positions)
             {
@@ -79,21 +71,21 @@ namespace BL.DocumentFandler
 
         protected async Task<string> SelectHtml(int id)
         {
-            var position = await _positionsRepository.FindById(id);
+            var position = await PositionsRepository.FindById(id);
             return "<select name='" + position.Name + "'>" + OptionsHtml(id) + "</select>";
         }
 
         protected string OptionsHtml(int id)
         {
-            var users = _usersRepository.GetAll(x => x.PositionId == id);
+            var users = UsersRepository.GetAll(x => x.PositionId == id);
 
-            StringBuilder optionsString = new StringBuilder();
+            var optionsString = new StringBuilder();
             foreach (var user in users)
             {
                 optionsString.Append
                     ("<option value=" + user.Id + ">" +
-                    user.FirstName + " " + user.LastName + " " + user.Patronymic +
-                    "</option>");
+                     user.FirstName + " " + user.LastName + " " + user.Patronymic +
+                     "</option>");
             }
             return optionsString.ToString();
         }

@@ -1,11 +1,9 @@
-﻿using System.Web.Mvc;
+﻿using System.Threading.Tasks;
+using System.Web.Mvc;
 using BL.AbstractClasses;
-using BL.DocumentTypeHandlers;
-using EntityModels;
-using BL.DocumentTemplatesHandlers;
-using System.Threading.Tasks;
 using BL.DocumentHandlers;
-
+using BL.DocumentTemplatesHandlers;
+using EntityModels;
 
 namespace DocumentFlow.Controllers
 {
@@ -14,7 +12,7 @@ namespace DocumentFlow.Controllers
         protected static RepositoryHandler<DocumentTemplate> TemplatesHandler =
             new DocumentTemplatesRepositoryHandler();
 
-        protected static HtmlDocumentHandler DocumentConverter = 
+        protected static HtmlDocumentHandler DocumentConverter =
             new HtmlDocumentHandler(AccountController.FullName);
 
         // GET: Main
@@ -30,9 +28,9 @@ namespace DocumentFlow.Controllers
             return View(templates);
         }
 
-        public ActionResult FillDocument(DocumentTemplate template)
+        public async Task<ActionResult> FillDocument(DocumentTemplate template)
         {
-            template = DocumentConverter.ConvertView(template);
+            template = await DocumentConverter.ConvertView(template);
             return View(template);
         }
     }

@@ -1,8 +1,9 @@
-﻿@model IEnumerable<EntityModels.User>
+﻿@using EntityModels
+@model IEnumerable<EntityModels.User>
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    IEnumerable<EntityModels.Position> positions = ViewBag.Positions;
-    IEnumerable<EntityModels.Role> roles = ViewBag.Roles;
+    IEnumerable<Position> positions = ViewBag.Positions;
+    IEnumerable<Role> roles = ViewBag.Roles;
 }
 
 <div class="main-block">
@@ -37,13 +38,37 @@
                                 <td>@item.FirstName</td>
                                 <td>@item.LastName</td>
                                 <td>@item.Patronymic</td>
-                                <td>@positions.FirstOrDefault(x => x.Id == item.PositionId).Name</td>
+                                <td>
+
+
+                                    @if (positions != null)
+                                    {
+                                        var firstOrDefault = positions.FirstOrDefault(x => x.Id == item.PositionId);
+
+                                        if (firstOrDefault != null)
+                                        {
+                                            @firstOrDefault.Name
+                                        }
+                                    }
+                                </td>
                                 <td>@item.Email</td>
                                 <td>@item.Password</td>
-                                <td>@roles.FirstOrDefault(x => x.Id == item.RoleId).Name</td>
+                                <td>
+
+
+                                    @if (roles != null)
+                                    {
+                                        var orDefault = roles.FirstOrDefault(x => x.Id == item.RoleId);
+
+                                        if (orDefault != null)
+                                        {
+                                            @orDefault.Name
+                                        }
+                                    }
+                                </td>
                                 <td class="action-buttons">
-                                    @Html.ActionLink(" ", "EditUser", new { id = item.Id }, new { @class = "edit-button" })
-                                    @Html.ActionLink(" ", "DeleteUser", new { id = item.Id }, new { @class = "remove-button" })
+                                    @Html.ActionLink(" ", "EditUser", new {id = item.Id}, new {@class = "edit-button"})
+                                    @Html.ActionLink(" ", "DeleteUser", new {id = item.Id}, new {@class = "remove-button"})
                                 </td>
                             </tr>
                             </tbody>

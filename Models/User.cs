@@ -1,9 +1,6 @@
 namespace EntityModels
 {
-    using System;
-    using System.Collections.Generic;
-    
-    public partial class User
+    public class User
     {
         public int Id { get; set; }
         public string FirstName { get; set; }

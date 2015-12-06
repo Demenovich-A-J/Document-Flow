@@ -1,6 +1,4 @@
-﻿@using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
-@using DocumentFlow.Controllers
-@model EntityModels.DocumentTemplate
+﻿@model EntityModels.DocumentTemplate
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -34,22 +32,21 @@
                     <a class="button" href="#" onclick="addPosition()">Add</a>
                 </div>
                 <div id="way" class="way-show">
-                    <span style="width: 30px; font-weight: 600;">№</span>
+                    <span style="font-weight: 600; width: 30px;">№</span>
                     <span style="font-weight: 600;">Должность</span>
                     <span style="font-weight: 600;">Действие</span>
                 </div>
             </div>
-            
+
             @Html.AntiForgeryToken()
-            
-            @Html.HiddenFor(model => model.PositionsPath,new {@id = "pass"})
+
+            @Html.HiddenFor(model => model.PositionsPath, new {@id = "pass"})
             @Html.EditorFor(model => model.Text, new {htmlAttributes = new {@id = "edit", autofocus = "", name = "form"}})
             @Html.DropDownListFor(model => model.TypeId, types)
 
             <a href="#" onclick="preview();" class="button" style="float: left;">Предпросмотр</a>
             <input class="button" name="submit" type="submit" value="Добавить">
             <br>
-
         }
     </div>
     <div class="footer">
@@ -92,7 +89,7 @@
 
 <!-- Initialize the editor. -->
 <script>
-    $(function () {
+    $(function() {
         $.FroalaEditor.DefineIcon('my_dropdown', { NAME: 'cog' });
         $.FroalaEditor.RegisterCommand('my_dropdown', {
             title: 'Advanced options',
@@ -113,7 +110,7 @@
                     }
                 }
             },
-            callback: function (cmd, val) {
+            callback: function(cmd, val) {
                 this.html.insert(val);
             }
         });
@@ -152,7 +149,7 @@
         });
     });
 
-    var positions = {}
+    var positions = {};
     var i = 0;
 
     function addPosition() {
@@ -177,13 +174,13 @@
 
     function removePosition(name) {
         var d = 1;
-        var newPositions = {}
+        var newPositions = {};
         var res = "";
         var passMass = "";
         for (var key in positions) {
             if (positions.hasOwnProperty(key) && key !== name) {
                 res += "<div class='new-position'>" + "<span style='width: 30px;'>" + d + "</span><span>" + key + "</span><span><a href='#' onclick='removePosition(\"" + key + "\")'>Удалить</a></span></div>";
-                passMass += " #" + key + " "; 
+                passMass += " #" + key + " ";
                 newPositions[key] = d;
                 d++;
             }
@@ -206,7 +203,7 @@
             url: '@Url.Action("ConvertView")',
             type: 'POST',
             data: $('form').serialize(),
-            success: function (response) {
+            success: function(response) {
                 $(".view").html(response);
             },
             async: true,

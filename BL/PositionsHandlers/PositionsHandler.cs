@@ -18,12 +18,12 @@ namespace BL.PositionsHandlers
 
         public List<SelectListItem> PositionsSelectList()
         {
-            IEnumerable<Position> positions = _positionsRepository.GetAll(x => true);
+            var positions = _positionsRepository.GetAll(x => true);
 
-            return positions != null ?
-                new List<SelectListItem>
-                    (positions.Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() })) :
-                new List<SelectListItem>();
+            return positions != null
+                ? new List<SelectListItem>
+                    (positions.Select(x => new SelectListItem {Text = x.Name, Value = x.Id.ToString()}))
+                : new List<SelectListItem>();
         }
     }
 }

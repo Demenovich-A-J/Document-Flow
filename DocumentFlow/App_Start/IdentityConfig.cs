@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNet.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using System.Web;
+using Microsoft.AspNet.Identity;
 
 namespace DocumentFlow.App_Start
 {
@@ -17,11 +14,11 @@ namespace DocumentFlow.App_Start
                 var from = "lavrinovich.kg.13@gmail.com";
                 var pass = "Supermario_1";
 
-                SmtpClient client = new SmtpClient("smtp.gmail.com", 25);
+                var client = new SmtpClient("smtp.gmail.com", 25);
 
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
                 client.UseDefaultCredentials = false;
-                client.Credentials = new System.Net.NetworkCredential(from, pass);
+                client.Credentials = new NetworkCredential(from, pass);
                 client.EnableSsl = true;
 
                 var mail = new MailMessage(from, message.Destination);
