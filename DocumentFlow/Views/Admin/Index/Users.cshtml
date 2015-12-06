@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<EntityModels.User>
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    IEnumerable<EntityModels.Position> positions = ViewBag.Positions;
+    IEnumerable<EntityModels.Role> roles = ViewBag.Roles;
 }
 
 <div class="main-block">
@@ -16,10 +18,14 @@
                     {
                         <thead>
                         <tr>
+                            <th>Логин</th>
                             <th>Имя</th>
                             <th>Фамилия</th>
                             <th>Отчество</th>
                             <th>Должность</th>
+                            <th>Email</th>
+                            <th>Пароль</th>
+                            <th>Роль</th>
                             <th>Операция</th>
                         </tr>
                         </thead>
@@ -27,13 +33,17 @@
                         {
                             <tbody>
                             <tr>
+                                <td>@item.UserName</td>
                                 <td>@item.FirstName</td>
                                 <td>@item.LastName</td>
                                 <td>@item.Patronymic</td>
-                                <td>@item.PositionId</td>
+                                <td>@positions.FirstOrDefault(x => x.Id == item.PositionId).Name</td>
+                                <td>@item.Email</td>
+                                <td>@item.Password</td>
+                                <td>@roles.FirstOrDefault(x => x.Id == item.RoleId).Name</td>
                                 <td class="action-buttons">
-                                    @Html.ActionLink(" ", " ", new {id = item.Id}, new {@class = "edit-button"})
-                                    @Html.ActionLink(" ", " ", new {id = item.Id}, new {@class = "remove-button"})
+                                    @Html.ActionLink(" ", "EditUser", new { id = item.Id }, new { @class = "edit-button" })
+                                    @Html.ActionLink(" ", "DeleteUser", new { id = item.Id }, new { @class = "remove-button" })
                                 </td>
                             </tr>
                             </tbody>
