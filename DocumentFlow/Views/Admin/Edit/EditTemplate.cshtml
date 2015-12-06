@@ -1,8 +1,11 @@
-﻿@model EntityModels.DocumentTemplate
+﻿@using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
+@using DocumentFlow.Controllers
+@model EntityModels.DocumentTemplate
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     var positions = ViewBag.Positions;
+    IEnumerable<SelectListItem> types = ViewBag.Types;
 }
 
 <div class="main-block">
@@ -11,179 +14,203 @@
         <div class="header">
             <h1>Редактирование документа</h1>
         </div>
-        <div class="way-edit">
-            <div class="selection">
-                <select id="positionsOP">
-                    @{
-                        foreach (var position in positions)
-                        {
-                            <option>@position.Name</option>
-                        }
-                    }
-                </select>
-                <a class="button" href="#" onclick="addPosition()">Add</a>
-            </div>
-            <div id="way" class="way-show">
-                <span style="font-weight: 600; width: 30px;">№</span>
-                <span style="font-weight: 600;">Должность</span>
-                <span style="font-weight: 600;">Действие</span>
-            </div>
-        </div>
+
         @using (Html.BeginForm())
         {
+            <div class="doc-name">
+                <h1 style="display: inline-block;">Название Документа: </h1>
+                @Html.EditorFor(model => model.Name)
+            </div>
+            <div class="way-edit">
+                <div class="selection">
+                    <select id="positionsOP">
+                        @{
+            foreach (var position in positions)
+            {
+                <option>@position.Name</option>
+            }
+                        }
+                    </select>
+                    <a class="button" href="#" onclick="addPosition()">Add</a>
+                </div>
+                <div id="way" class="way-show">
+                    <span style="width: 30px; font-weight: 600;">№</span>
+                    <span style="font-weight: 600;">Должность</span>
+                    <span style="font-weight: 600;">Действие</span>
+                </div>
+            </div>
+
             @Html.AntiForgeryToken()
 
-            @Html.EditorFor(model => model.Text, new {htmlAttributes = new {@id = "edit", autofocus = "", name = "form"}})
+            @Html.HiddenFor(model => model.PositionsPass, new { @id = "pass" })
+            @Html.EditorFor(model => model.Text, new { htmlAttributes = new { @id = "edit", autofocus = "", name = "form" } })
+            @Html.DropDownListFor(model => model.TypeId, types)
 
-            <input class="button" name="submit" type="submit" value="Редактировать">
+            <a href="#" onclick="preview();" class="button" style="float: left;">Предпросмотр</a>
+            <input class="button" name="submit" type="submit" value="Добавить">
+            <br>
+
         }
-
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-
-        <!-- Include JS files. -->
-        <script src="~/Content/js/froala_editor.min.js"></script>
-
-        <!-- Include Plugins. -->
-        <script type="text/javascript" src="~/Content/js/plugins/align.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/char_counter.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/code_view.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/colors.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/emoticons.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/entities.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/file.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/font_family.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/font_size.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/fullscreen.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/image.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/image_manager.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/inline_style.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/line_breaker.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/link.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/lists.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/paragraph_format.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/paragraph_style.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/quote.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/table.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/save.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/url.min.js"></script>
-        <script type="text/javascript" src="~/Content/js/plugins/video.min.js"></script>
-
-        <!-- Include Language file if we'll use it. -->
-        <script type="text/javascript" src="~/Content/js/langs/ro.js"></script>
-
-        <!-- Initialize the editor. -->
-        <script>
-            $(function() {
-                $.FroalaEditor.DefineIcon('my_dropdown', { NAME: 'cog' });
-                $.FroalaEditor.RegisterCommand('my_dropdown', {
-                    title: 'Advanced options',
-                    type: 'dropdown',
-                    focus: false,
-                    undo: false,
-                    refreshAfterCallback: true,
-                    options: {
-                        "#Текст": "Текст",
-                        "#ФИО": "ФИО",
-                        "#Дата": "Дата",
-                        "#Время": "Время",
-                        "#БольшойТекс": "Большой Текст",
-                        @{
-                            foreach (var position in positions)
-                            {
-                                @Html.Raw("\'#" + @position.Name + "\'" + ":" + "\'" + @position.Name + "\',\n")
-                            }
-                        }
-
-
-                    },
-                    callback: function(cmd, val) {
-                        this.html.insert(val);
-                    }
-                });
-
-                $('#edit').froalaEditor({
-                    tabSpaces: 5,
-                    disableRightClick: true,
-                    inlineMode: false,
-                    theme: 'gray',
-                    language: 'ru',
-                    toolbarButtons: [
-                        'fullscreen', 'bold', 'italic',
-                        'underline', 'strikeThrough', 'fontFamily', 'fontSize',
-                        '|', 'color', 'paragraphStyle', '|', 'paragraphFormat',
-                        'align', 'formatOL', 'formatUL', '-', 'insertLink',
-                        'insertTable', 'undo', 'redo', 'clearFormatting',
-                        'selectAll', 'html', "|", 'formatBlock', 'my_dropdown'
-                    ],
-                    toolbarButtonsMD: [
-                        'fullscreen', 'bold', 'italic',
-                        'underline', 'strikeThrough', 'fontFamily', 'fontSize',
-                        '|', 'color', 'paragraphStyle', '|', 'paragraphFormat',
-                        'align', 'formatOL', 'formatUL', '-', 'insertLink',
-                        'insertTable', 'undo', 'redo', 'clearFormatting',
-                        'selectAll', 'html', "|", 'formatBlock', 'my_dropdown'
-                    ],
-                    toolbarButtonsSM: [
-                        'my_dropdown', 'fullscreen', 'bold', 'italic',
-                        'underline', 'strikeThrough', 'fontFamily', 'fontSize',
-                        '|', 'color', 'paragraphStyle', '|', 'paragraphFormat',
-                        'align', 'formatOL', 'formatUL', '-', 'insertLink',
-                        'insertTable', 'undo', 'redo', 'clearFormatting',
-                        'selectAll', 'html', "|", 'formatBlock', 'my_dropdown'
-                    ]
-
-                });
-            });
-
-            var positions = {};
-            var i = 0;
-
-            function addPosition() {
-                var e = document.getElementById("positionsOP");
-                var strUser = e.options[e.selectedIndex].text;
-
-                if (positions[strUser] != null) {
-                    alert(strUser + " is alredy in qery!!!");
-                    return;
-                }
-
-                i++;
-                positions[strUser] = i;
-
-                console.log(positions);
-
-                var d = document.getElementById("way");
-
-                d.innerHTML += "<div class='new-position'>" + "<span style='width: 30px;'>" + i + "</span><span>" + strUser + "</span><span><a href='#' onclick='removePosition(\"" + strUser + "\")'>Удалить</a></span></div>";
-
-            };
-
-            function removePosition(name) {
-                var d = 1;
-                var newPositions = {};
-                var res = "";
-                for (var key in positions) {
-                    if (positions.hasOwnProperty(key) && key !== name) {
-                        res += "<div class='new-position'>" + "<span style='width: 30px;'>" + d + "</span><span>" + key + "</span><span><a href='#' onclick='removePosition(\"" + key + "\")'>Удалить</a></span></div>";
-                        newPositions[key] = d;
-                        d++;
-                    }
-                }
-
-                var g = document.getElementById("way");
-
-                if (d !== 1) {
-                    g.innerHTML = "<span style='width: 30px; font-weight: 600;'>№</span><span style=' font-weight: 600;'>Должность</span><span style=' font-weight: 600;'>Действие</span>" + res;
-                } else {
-                    g.innerHTML = "<span style='width: 30px; font-weight: 600;'>№</span><span style=' font-weight: 600;'>Должность</span><span style=' font-weight: 600;'>Действие</span>";
-                }
-                i = d - 1;
-                positions = newPositions;
-            };
-
-        </script>
     </div>
     <div class="footer">
         <h1>© Copyright 2015. All rights reserved by Demen_off</h1>
     </div>
 </div>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+<!-- Include JS files. -->
+<script src="~/Content/js/froala_editor.min.js"></script>
+
+<!-- Include Plugins. -->
+<script type="text/javascript" src="~/Content/js/plugins/align.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/char_counter.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/code_view.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/colors.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/emoticons.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/entities.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/file.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/font_family.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/font_size.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/fullscreen.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/image.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/image_manager.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/inline_style.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/line_breaker.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/link.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/lists.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/paragraph_format.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/paragraph_style.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/quote.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/table.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/save.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/url.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/video.min.js"></script>
+
+<!-- Include Language file if we'll use it. -->
+<script type="text/javascript" src="~/Content/js/langs/ro.js"></script>
+
+<!-- Initialize the editor. -->
+<script>
+    $(function () {
+        $.FroalaEditor.DefineIcon('my_dropdown', { NAME: 'cog' });
+        $.FroalaEditor.RegisterCommand('my_dropdown', {
+            title: 'Advanced options',
+            type: 'dropdown',
+            focus: false,
+            undo: false,
+            refreshAfterCallback: true,
+            options: {
+                "#Текст": "Текст",
+                "#ФИО": "ФИО",
+                "#Дата": "Дата",
+                "#Время": "Время",
+                "#БольшойТекст": "Большой Текст",
+                @{
+                    foreach (var position in positions)
+                    {
+                        @Html.Raw("\'#" + @position.Name + "\'" + ":" + "\' " + @position.Name + " \',\n")
+                    }
+                }
+            },
+            callback: function (cmd, val) {
+                this.html.insert(val);
+            }
+        });
+
+        $('#edit').froalaEditor({
+            tabSpaces: 5,
+            disableRightClick: true,
+            inlineMode: false,
+            theme: 'gray',
+            language: 'ru',
+            toolbarButtons: [
+                'fullscreen', 'bold', 'italic',
+                'underline', 'strikeThrough', 'fontFamily', 'fontSize',
+                '|', 'color', 'paragraphStyle', '|', 'paragraphFormat',
+                'align', 'formatOL', 'formatUL', '-', 'insertLink',
+                'insertTable', 'undo', 'redo', 'clearFormatting',
+                'selectAll', 'html', "|", 'formatBlock', 'my_dropdown'
+            ],
+            toolbarButtonsMD: [
+                'fullscreen', 'bold', 'italic',
+                'underline', 'strikeThrough', 'fontFamily', 'fontSize',
+                '|', 'color', 'paragraphStyle', '|', 'paragraphFormat',
+                'align', 'formatOL', 'formatUL', '-', 'insertLink',
+                'insertTable', 'undo', 'redo', 'clearFormatting',
+                'selectAll', 'html', "|", 'formatBlock', 'my_dropdown'
+            ],
+            toolbarButtonsSM: [
+                'my_dropdown', 'fullscreen', 'bold', 'italic',
+                'underline', 'strikeThrough', 'fontFamily', 'fontSize',
+                '|', 'color', 'paragraphStyle', '|', 'paragraphFormat',
+                'align', 'formatOL', 'formatUL', '-', 'insertLink',
+                'insertTable', 'undo', 'redo', 'clearFormatting',
+                'selectAll', 'html', "|", 'formatBlock', 'my_dropdown'
+            ]
+
+        });
+    });
+
+    var positions = {}
+    var i = 0;
+
+    function addPosition() {
+        var e = document.getElementById("positionsOP");
+        var strUser = e.options[e.selectedIndex].text;
+
+        if (positions[strUser] != null) {
+            alert(strUser + " is alredy in qery!!!");
+            return;
+        }
+
+        i++;
+        positions[strUser] = i;
+
+        var d = document.getElementById("way");
+        var pass = document.getElementById("pass");
+        pass.value += " #" + strUser + " ";
+
+        d.innerHTML += "<div class='new-position'>" + "<span style='width: 30px;'>" + i + "</span><span>" + strUser + "</span><span><a href='#' onclick='removePosition(\"" + strUser + "\")'>Удалить</a></span></div>";
+
+    };
+
+    function removePosition(name) {
+        var d = 1;
+        var newPositions = {}
+        var res = "";
+        var passMass = "";
+        for (var key in positions) {
+            if (positions.hasOwnProperty(key) && key !== name) {
+                res += "<div class='new-position'>" + "<span style='width: 30px;'>" + d + "</span><span>" + key + "</span><span><a href='#' onclick='removePosition(\"" + key + "\")'>Удалить</a></span></div>";
+                passMass += " #" + key + " ";
+                newPositions[key] = d;
+                d++;
+            }
+        }
+
+        var g = document.getElementById("way");
+        var pass = document.getElementById("pass");
+        pass.value = passMass;
+        if (d !== 1) {
+            g.innerHTML = "<span style='width: 30px; font-weight: 600;'>№</span><span style=' font-weight: 600;'>Должность</span><span style=' font-weight: 600;'>Действие</span>" + res;
+        } else {
+            g.innerHTML = "<span style='width: 30px; font-weight: 600;'>№</span><span style=' font-weight: 600;'>Должность</span><span style=' font-weight: 600;'>Действие</span>";
+        }
+        i = d - 1;
+        positions = newPositions;
+    };
+
+    function preview() {
+        $.ajax({
+            url: '@Url.Action("ConvertView")',
+            type: 'POST',
+            data: $('form').serialize(),
+            success: function (response) {
+                $(".view").html(response);
+            },
+            async: true,
+            processData: false
+        });
+    }
+</script>

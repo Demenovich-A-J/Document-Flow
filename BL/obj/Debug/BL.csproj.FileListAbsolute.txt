@@ -10,15 +10,3 @@ D:\Рабочий стол\DocumentFlow\BL\obj\Debug\BL.pdb
 D:\Рабочий стол\DocumentFlow\BL\bin\Debug\ru\EntityFramework.resources.dll
 D:\Рабочий стол\DocumentFlow\BL\bin\Debug\EntityModels.dll
 D:\Рабочий стол\DocumentFlow\BL\bin\Debug\EntityModels.pdb
-D:\SourceTreeProjects\Document-Flow\BL\bin\Debug\BL.dll
-D:\SourceTreeProjects\Document-Flow\BL\bin\Debug\BL.pdb
-D:\SourceTreeProjects\Document-Flow\BL\bin\Debug\DAL.dll
-D:\SourceTreeProjects\Document-Flow\BL\bin\Debug\EntityModels.dll
-D:\SourceTreeProjects\Document-Flow\BL\bin\Debug\EntityFramework.dll
-D:\SourceTreeProjects\Document-Flow\BL\bin\Debug\DAL.pdb
-D:\SourceTreeProjects\Document-Flow\BL\bin\Debug\EntityModels.pdb
-D:\SourceTreeProjects\Document-Flow\BL\bin\Debug\EntityFramework.xml
-D:\SourceTreeProjects\Document-Flow\BL\bin\Debug\ru\EntityFramework.resources.dll
-D:\SourceTreeProjects\Document-Flow\BL\obj\Debug\BL.csprojResolveAssemblyReference.cache
-D:\SourceTreeProjects\Document-Flow\BL\obj\Debug\BL.dll
-D:\SourceTreeProjects\Document-Flow\BL\obj\Debug\BL.pdb

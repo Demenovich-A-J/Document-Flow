@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BL.RolesHandlers
+namespace BL.DocumentPathsHandler
 {
-    public class RolesRepositoryHandler : RepositoryHandler<Role>
+    public class DocumentPathRepositoryHandler : RepositoryHandler<DocumentPath>
     {
-        public RolesRepositoryHandler() : base(new RolesRepository()) { }
+        public DocumentPathRepositoryHandler() : base(new DocumentPathsRepository()) { }
     }
 }

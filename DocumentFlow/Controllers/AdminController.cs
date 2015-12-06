@@ -2,19 +2,44 @@
 using System.Web.Mvc;
 using BL.AbstractClasses;
 using BL.DocumentHandler;
-using BL.DocumentHandlers;
-using BL.DocumentTemplatesHandlers;
 using BL.DocumentTypeHandlers;
 using BL.PositionsHandler;
 using BL.RolesHandlers;
 using BL.UsersHandlers;
 using EntityModels;
+using BL.DocumentFandler;
+using BL.DocumentTemplatesHandlers;
 
 namespace DocumentFlow.Controllers
 {
     public class AdminController : Controller
     {
+        #region Handlers
+        
         protected HtmlDocumentHandler DocumentHandler;
+
+        protected static RepositoryHandler<DocumentTemplate> _templatesHandler =
+            new DocumentTemplatesRepositoryHandler();
+
+        protected static RepositoryHandler<Position> _positionsHandler =
+            new PositionsRepositoryHandler();
+
+        protected static RepositoryHandler<DocumentType> _documentTypesHandler =
+            new DocumentTypesRepositoryHandler();
+
+        protected static RepositoryHandler<Document> _documentsHandler =
+            new DocumentsRepositoryHandler();
+
+        protected static RepositoryHandler<Role> _rolesHandler =
+            new RolesRepositoryHandler();
+
+        protected static RepositoryHandler<User> _usersHandler =
+            new UsersRepositoryHandler();
+
+        protected static DocumentTypesHandler _typesHtmlHandler =
+            new DocumentTypesHandler();
+
+        #endregion
 
         public AdminController()
         {
@@ -42,27 +67,6 @@ namespace DocumentFlow.Controllers
 
         #endregion
 
-        #region Handlers
-
-        protected static RepositoryHandler<DocumentTemplate> _templatesHandler =
-            new DocumentTemplatesRepositoryHandler();
-
-        protected static RepositoryHandler<Position> _positionsHandler =
-            new PositionsRepositoryHandler();
-
-        protected static RepositoryHandler<DocumentType> _documentTypesHandler =
-            new DocumentTypesRepositoryHandler();
-
-        protected static RepositoryHandler<Document> _documentsHandler =
-            new DocumentsRepositoryHandler();
-
-        protected static RepositoryHandler<Role> _rolesHandler =
-            new RolesRepositoryHandler();
-
-        protected static RepositoryHandler<User> _usersHandler =
-            new UsersRepositoryHandler();
-
-        #endregion
 
         #region Template
 
@@ -72,16 +76,13 @@ namespace DocumentFlow.Controllers
             return View("Index/DocumentTemplates", templates);
         }
 
-        public ActionResult EditTemplate()
-        {
-            return View("Edit/EditTemplate");
-        }
-
         [HttpGet]
         public ActionResult CreateTemplate()
         {
-            var positions = _positionsHandler.GetAll(x => true);
-            ViewBag.Positions = positions;
+            ViewBag.Positions = _positionsHandler.GetAll(x => true);
+
+            var t = _typesHtmlHandler.TypesSelectList();
+            ViewBag.Types = _typesHtmlHandler.TypesSelectList();
 
             return View("Create/CreateTemplate", new DocumentTemplate());
         }
@@ -90,9 +91,7 @@ namespace DocumentFlow.Controllers
         [ValidateInput(false)]
         public ActionResult CreateTemplate(DocumentTemplate template)
         {
-            template.Name = "Default1";
             template.TypeId = 1;
-
             _templatesHandler.Add(template);
 
             return RedirectToAction("DocumentTemplates", "Admin");

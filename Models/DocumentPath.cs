@@ -3,12 +3,11 @@ namespace EntityModels
     using System;
     using System.Collections.Generic;
     
-    public partial class Document
+    public partial class DocumentPath
     {
         public int Id { get; set; }
+        public int DocumentId { get; set; }
         public int UserId { get; set; }
-        public int TemplateId { get; set; }
-        public string Name { get; set; }
-        public string Text { get; set; }
+        public Nullable<bool> Status { get; set; }
     }
 }

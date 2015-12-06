@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
-    public class DocumentTypesRepository : DataRepository<DocumentType>
+    public class DocumentPathsRepository : DataRepository<DocumentPath>
     {
-        public override async Task<DocumentType> FindById(int id)
+        public override async Task<DocumentPath> FindById(int id)
         {
-            DocumentType type;
+            DocumentPath documentPath;
             using (var context = new EntityModels.Database())
             {
-                type = await context.DocumentTypes.FindAsync(id);
+                documentPath = await context.DocumentPaths.FindAsync(id);
             }
-            return type;
+            return documentPath;
         }
     }
 }

@@ -9,17 +9,15 @@
         <thead>
         <tr>
             <th>Название</th>
-            <th>Тип</th>
             <th></th>
         </tr>
         </thead>
-        foreach (var item in Model)
+        foreach (var item in Model.AsEnumerable())
         {
             <tbody>
             <tr>
                 <td>@item.Name</td>
-                <td>@item.TypeID</td>
-                <td>@Html.ActionLink("Заполнить", "ConvertView", "Document", new {item.Id}, null)</td>
+                <td>@Html.ActionLink("Заполнить", "FillDocument", "Main", new {item.Id}, null)</td>
             </tr>
             </tbody>
         }

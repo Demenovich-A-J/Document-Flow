@@ -2,13 +2,20 @@
 using BL.AbstractClasses;
 using BL.DocumentTypeHandlers;
 using EntityModels;
+using BL.DocumentTemplatesHandlers;
+using System.Threading.Tasks;
+using BL.DocumentFandler;
+
 
 namespace DocumentFlow.Controllers
 {
     public class MainController : Controller
     {
-        protected static RepositoryHandler<DocumentType> _documentTypesHandler =
-            new DocumentTypesRepositoryHandler();
+        protected static RepositoryHandler<DocumentTemplate> _templatesHandler =
+            new DocumentTemplatesRepositoryHandler();
+
+        protected static HtmlDocumentHandler _documentConverter = 
+            new HtmlDocumentHandler(AccountController.FullName);
 
         // GET: Main
         public ActionResult Index()
@@ -18,9 +25,16 @@ namespace DocumentFlow.Controllers
 
         public ActionResult DocumentTemplates()
         {
-            var templates = _documentTypesHandler.GetAll(x => true);
+            var templates = _templatesHandler.GetAll(x => true);
 
             return View(templates);
+        }
+
+        public async Task<ActionResult> FillDocument(int id)
+        {
+            var template = await _templatesHandler.FindById(id);
+            template = _documentConverter.ConvertView(template);
+            return View(template);
         }
     }
 }

@@ -326,11 +326,13 @@
     <Content Include="Views\Admin\Index\Users.cshtml" />
     <Content Include="Views\Account\EditPassword.cshtml" />
     <Content Include="Views\Admin\Index\DocumentTypes.cshtml" />
+    <Content Include="Views\Document\ConvertView.cshtml" />
     <Content Include="Views\Main\DocumentTemplates.cshtml" />
     <Content Include="Views\Admin\Create\CreateDocumentType.cshtml" />
     <Content Include="Views\Admin\Edit\EditDocumentType.cshtml" />
+    <Content Include="Views\Admin\Create\TemplatePreview.cshtml" />
     <Content Include="Views\Admin\Preview\Preview.cshtml" />
-    <Content Include="Views\Document\ConvertView.cshtml" />
+    <Content Include="Views\Main\FillDocument.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

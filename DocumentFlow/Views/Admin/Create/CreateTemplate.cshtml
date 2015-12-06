@@ -5,6 +5,7 @@
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     var positions = ViewBag.Positions;
+    IEnumerable<SelectListItem> types = ViewBag.Types;
 }
 
 <div class="main-block">
@@ -43,7 +44,7 @@
             
             @Html.HiddenFor(model => model.PositionsPass,new {@id = "pass"})
             @Html.EditorFor(model => model.Text, new {htmlAttributes = new {@id = "edit", autofocus = "", name = "form"}})
-
+            @Html.DropDownListFor(model => model.TypeId, types)
 
             <a href="#" onclick="preview();" class="button" style="float: left;">Предпросмотр</a>
             <input class="button" name="submit" type="submit" value="Добавить">

@@ -1,54 +1,73 @@
-﻿using System.Collections.Generic;
+﻿using DAL.AbstractRepository;
+using DAL.Repositories;
+using EntityModels;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using DAL.AbstractRepository;
-using DAL.Repositories;
-using EntityModels;
+using System.Threading.Tasks;
 
-namespace BL.DocumentHandlers
+namespace BL.DocumentFandler
 {
     public class HtmlDocumentHandler
     {
-        protected string FullUserName;
-        protected DataRepository<Position> PositionsRepository;
-        protected DataRepository<DocumentTemplate> TemplatesRepository;
-        protected DataRepository<User> UsersRepository;
-        protected Regex ReplaceRegex = new Regex(@"#(\w+)",RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
+        protected DataRepository<User> _usersRepository;
+        protected DataRepository<Position> _positionsRepository;
+        protected DataRepository<DocumentTemplate> _templatesRepository;
+
+        protected string _fullUserName;
+
         public HtmlDocumentHandler(string fullUserName)
         {
-            UsersRepository = new UsersRepository();
-            PositionsRepository = new PositionsRepository();
-            TemplatesRepository = new DocumentTemplatesRepository();
-            FullUserName = fullUserName;
+            _usersRepository = new UsersRepository();
+            _positionsRepository = new PositionsRepository();
+            _templatesRepository = new DocumentTemplatesRepository();
+
+            _fullUserName = fullUserName;
         }
 
         public DocumentTemplate ConvertView(DocumentTemplate template)
         {
-            template.Text = ReplaceBy(template.Text, BuildDictionary());
+            var dictionary = BuildDictionary();
+            template.Text = ReplaceBy(template.Text, dictionary);
+            template.PositionsPath = ReplaceBy(template.Text, dictionary);
             return template;
         }
 
         protected string ReplaceBy(string text, Dictionary<string, string> dictionary)
         {
+            string pattern = @"#(\w+)";
 
-            var matchCollection = ReplaceRegex.Matches(text);
+            var matchCollection =
+                Regex.Matches(text, pattern, RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
 
-            return matchCollection.Count == 0 ? text : matchCollection.Cast<object>().Where(match => dictionary.ContainsKey(match.ToString())).Aggregate(text, (current, match) => current.Replace(match.ToString(), dictionary[match.ToString()]));
+            if (matchCollection.Count != 0)
+            {
+                foreach (var match in matchCollection)
+                {
+                    if (dictionary.ContainsKey(match.ToString()))
+                    {
+                        text = text.Replace(match.ToString(), dictionary[match.ToString()]);
+                    }
+                }
+            }
+
+            return text;
         }
 
         protected Dictionary<string, string> BuildDictionary()
         {
-            var positions = PositionsRepository.GetAll(x => true);
+            var positions = _positionsRepository.GetAll(x => true);
 
             var dictionary = new Dictionary<string, string>
-            {
-                {"#БольшойТекст", "<textarea></textarea>"},
-                {"#Текст", "<input type='text'></input>"},
-                {"#ФИО", FullUserName},
-                {"#Дата", "<input type='date'></input>"},
-                {"#Время", "<input type='time'></input>"}
-            };
+                {
+                    {"#БольшойТекст", "<textarea></textarea>"},
+                    {"#Текст", "<input type='text'></input>"},
+                    {"#ФИО", _fullUserName},
+                    {"#Дата", "<input type='date'></input>"},
+                    {"#Время", "<input type='time'></input>"}
+                };
 
             foreach (var position in positions)
             {
@@ -65,15 +84,15 @@ namespace BL.DocumentHandlers
 
         protected string OptionsHtml(int id)
         {
-            var users = UsersRepository.GetAll(x => x.PositionId == id);
+            var users = _usersRepository.GetAll(x => x.PositionId == id);
 
-            var optionsString = new StringBuilder();
+            StringBuilder optionsString = new StringBuilder();
             foreach (var user in users)
             {
                 optionsString.Append
                     ("<option value=" + user.Id + ">" +
-                     user.FirstName + " " + user.LastName + " " + user.Patronymic +
-                     "</option>");
+                    user.FirstName + " " + user.LastName + " " + user.Patronymic +
+                    "</option>");
             }
             return optionsString.ToString();
         }
