@@ -8,6 +8,7 @@ using BL.PositionsHandler;
 using BL.RolesHandlers;
 using BL.UsersHandlers;
 using EntityModels;
+using BL.DocumentFandler;
 namespace DocumentFlow.Controllers
 {
     public class AdminController : Controller
@@ -38,6 +39,9 @@ namespace DocumentFlow.Controllers
 
         protected static RepositoryHandler<User> _usersHandler =
             new UsersRepositoryHandler();
+
+        protected static DocumentTypesHandler _typesHtmlHandler =
+            new DocumentTypesHandler();
 
         #endregion
 
