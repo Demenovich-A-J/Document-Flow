@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using EntityModels;
 using BL.DocumentFandler;
+using System.Threading.Tasks;
 
 namespace DocumentFlow.Controllers
 {
@@ -15,9 +16,9 @@ namespace DocumentFlow.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult ConvertView(DocumentTemplate template)
+        public async Task<ActionResult> ConvertView(DocumentTemplate template)
         {
-            template = _documentHandler.ConvertView(template);
+            template = await _documentHandler.ConvertView(template);
             return View(template);
         }
     }

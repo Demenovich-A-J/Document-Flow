@@ -48,11 +48,11 @@ namespace DocumentFlow.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult ConvertView(DocumentTemplate template)
+        public async Task<ActionResult> ConvertView(DocumentTemplate template)
         {
             if (template.Text != null)
             {
-                template = DocumentHandler.ConvertView(template);
+                template = await DocumentHandler.ConvertView(template);
             }
 
             return View("Preview/Preview",template);

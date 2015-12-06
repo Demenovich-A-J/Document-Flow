@@ -33,8 +33,14 @@ namespace DocumentFlow.Controllers
         public async Task<ActionResult> FillDocument(int id)
         {
             var template = await _templatesHandler.FindById(id);
-            template = _documentConverter.ConvertView(template);
+            template = await _documentConverter.ConvertView(template);
             return View(template);
+        }
+
+        [HttpPost]
+        public ActionResult FillDocument(DocumentTemplate template)
+        {
+            return View();
         }
     }
 }

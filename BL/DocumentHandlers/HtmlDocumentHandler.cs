@@ -27,11 +27,11 @@ namespace BL.DocumentFandler
             _fullUserName = fullUserName;
         }
 
-        public DocumentTemplate ConvertView(DocumentTemplate template)
+        public async Task<DocumentTemplate> ConvertView(DocumentTemplate template)
         {
-            var dictionary = BuildDictionary();
+            var dictionary = await BuildDictionary();
             template.Text = ReplaceBy(template.Text, dictionary);
-            template.PositionsPath = ReplaceBy(template.Text, dictionary);
+            template.PositionsPath = ReplaceBy(template.PositionsPath, dictionary);
             return template;
         }
 
@@ -56,30 +56,31 @@ namespace BL.DocumentFandler
             return text;
         }
 
-        protected Dictionary<string, string> BuildDictionary()
+        protected async Task<Dictionary<string, string>> BuildDictionary()
         {
             var positions = _positionsRepository.GetAll(x => true);
 
             var dictionary = new Dictionary<string, string>
                 {
-                    {"#БольшойТекст", "<textarea></textarea>"},
-                    {"#Текст", "<input type='text'></input>"},
-                    {"#ФИО", _fullUserName},
-                    {"#Дата", "<input type='date'></input>"},
-                    {"#Время", "<input type='time'></input>"}
+                    {"#БольшойТекст", "<textarea name='БольшойТекст'></textarea>"},
+                    {"#Текст", "<input name='Текст' type='text'></input>"},
+                    {"#ФИО", "<p name='ФИО'>" + _fullUserName + "</p>"},
+                    {"#Дата", "<input name='Дата' type='date'></input>"},
+                    {"#Время", "<input name='Время' type='time'></input>"}
                 };
 
             foreach (var position in positions)
             {
-                dictionary.Add("#" + position.Name, SelectHtml(position.Id));
+                dictionary.Add("#" + position.Name, await SelectHtml(position.Id));
             }
 
             return dictionary;
         }
 
-        protected string SelectHtml(int id)
+        protected async Task<string> SelectHtml(int id)
         {
-            return "<select>" + OptionsHtml(id) + "</select>";
+            var position = await _positionsRepository.FindById(id);
+            return "<select name='" + position.Name + "'>" + OptionsHtml(id) + "</select>";
         }
 
         protected string OptionsHtml(int id)
