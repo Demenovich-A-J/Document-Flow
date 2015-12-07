@@ -3,17 +3,38 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<hr/>
-<p>@Model.Name</p>
-<hr/>
+<br />
 
-<div>
+<form method="POST">
+    @Model.Name
+    <br />
+
     @Html.Raw(Model.Text)
-</div>
+    <br />
 
-<hr/>
-<p>Путь</p>
-<hr/>
-<div>
+    <p>Путь</p>
+    <br />
+
     @Html.Raw(Model.PositionsPath)
-</div>
+
+    <a id="send" href="#">Send</a>
+</form>
+
+<script>
+    $('#send').click(function () {
+        var a = $('form').serializeArray();
+
+        for (var i = 0; i < a.length; i++) {
+            result[a[i]["name"].toString()] = a[i]["value"].toString();
+        }
+        $.ajax({
+            url: '@Url.Action("GetResult")' + '/action?json=' + JSON.stringify(result),
+            type: 'POST',
+            success: function (response) {
+                $(".view").html(response);
+            },
+            async: true,
+            processData: false
+        });
+    });
+</script>

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using BL.AbstractClasses;
 using BL.DocumentHandlers;
@@ -28,10 +30,21 @@ namespace DocumentFlow.Controllers
             return View(templates);
         }
 
+        
         public async Task<ActionResult> FillDocument(DocumentTemplate template)
         {
-            template = await DocumentConverter.ConvertView(template);
-            return View(template);
+            var res = TemplatesHandler.GetAll(x => true).FirstOrDefault(x => x.Id == template.Id);
+
+            res = await DocumentConverter.ConvertView(res);
+            return View(res);
         }
+
+
+        [HttpPost]
+        public void GetResult(string json)
+        {
+            var pairs = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<Dictionary<string,string>>(json);
+        }
+
     }
 }
