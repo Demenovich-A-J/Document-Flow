@@ -491,7 +491,6 @@ textarea:focus {
 
 .add-new-entry {
     background: url('/Content/images/Add_button_inside_black_circle_64.png') no-repeat center center;
-    background-color: #bebebe;
     display: inline-block;
     height: 64px;
     margin-bottom: 20px;

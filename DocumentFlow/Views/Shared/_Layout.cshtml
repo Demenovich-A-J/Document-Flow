@@ -7,7 +7,11 @@
     <link href="~/Content/styles.css" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,700" rel="stylesheet" type="text/css">
     <link href="~/Content/froala_style.min.css" rel="stylesheet" type="text/css"/>
+    <link href="~/Content/froala_style.min.css" rel="stylesheet" type="text/css"/>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <title>Главная</title>
 </head>
 <body>
@@ -30,7 +34,10 @@
             @Html.ActionLink("Заполнить", "DocumentTemplates", "Main")
         </nav>
     </div>
-    @RenderBody()
+    <div class="main-block">
+        
+        @RenderBody()
+    </div>
 </div>
 </body>
 </html>
