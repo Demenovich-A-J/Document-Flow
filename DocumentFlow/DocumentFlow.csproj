@@ -44,11 +44,18 @@
     <Reference Include="ActionMailer.Net.Mvc">
       <HintPath>..\packages\ActionMailer.0.7.4\lib\Net40\ActionMailer.Net.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="AutoMapper, Version=4.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoMapper.4.1.1\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="GridMvc">
+      <HintPath>..\packages\Grid.Mvc.3.0.0\lib\net40\GridMvc.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -127,12 +134,19 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\admin-styles.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\froala_content.css" />
     <Content Include="Content\froala_content.min.css" />
     <Content Include="Content\froala_editor.css" />
     <Content Include="Content\froala_editor.min.css" />
     <Content Include="Content\froala_style.css" />
     <Content Include="Content\froala_style.min.css" />
+    <Content Include="Content\Gridmvc.css" />
+    <Content Include="Content\gridmvc.datepicker.css" />
+    <Content Include="Content\gridmvc.datepicker.min.css" />
     <Content Include="Content\images\Add_button_inside_black_circle_64.png" />
     <Content Include="Content\images\Add_button_inside_black_circle_64_hover.png" />
     <Content Include="Content\images\button_delete_red_2750.png" />
@@ -272,6 +286,20 @@
     <Content Include="Content\themes\royal.min.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\bootstrap-datepicker.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\gridmvc.js" />
+    <Content Include="Scripts\gridmvc.lang.ru.js" />
+    <Content Include="Scripts\gridmvc.min.js" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <None Include="Scripts\jquery-1.9.1.intellisense.js" />
+    <Content Include="Scripts\jquery-1.9.1.js" />
+    <Content Include="Scripts\jquery-1.9.1.min.js" />
+    <Content Include="Scripts\validate.config.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -281,22 +309,33 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
+    <Compile Include="Controllers\DocumentTemplateController.cs" />
+    <Compile Include="Controllers\DocumentTypeController.cs" />
+    <Compile Include="Controllers\DocumentViewController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MainController.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PositionController.cs" />
+    <Compile Include="Controllers\RoleController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AuthorizeAttribute\CustomAuthorize.cs" />
     <Compile Include="Models\CreateRoleModel.cs" />
-    <Compile Include="Models\CustomAuthentication.cs" />
+    <Compile Include="Models\Document.cs" />
+    <Compile Include="Models\DocumentTemplate.cs" />
+    <Compile Include="Models\DocumentType.cs" />
+    <Compile Include="Models\DocumentView.cs" />
     <Compile Include="Models\EditUserModel.cs" />
     <Compile Include="Models\EditPasswordModel.cs" />
     <Compile Include="Models\EditRoleModel.cs" />
-    <Compile Include="Models\IAuthentication.cs" />
     <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\Position.cs" />
     <Compile Include="Models\RegisterModel.cs" />
-    <Compile Include="Models\UserProvider.cs" />
+    <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -306,34 +345,41 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="Views\Account\Delete.cshtml" />
+    <Content Include="Views\Manage\Delete.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Main\Index.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Account\Edit.cshtml" />
+    <Content Include="Views\Manage\Edit.cshtml" />
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
-    <Content Include="Views\Admin\Create\CreatePosition.cshtml" />
-    <Content Include="Views\Admin\Create\CreateRole.cshtml" />
-    <Content Include="Views\Admin\Create\CreateTemplate.cshtml" />
-    <Content Include="Views\Admin\Edit\EditPosition.cshtml" />
-    <Content Include="Views\Admin\Edit\EditRole.cshtml" />
-    <Content Include="Views\Admin\Edit\EditTemplate.cshtml" />
-    <Content Include="Views\Admin\Index\DocumentTemplates.cshtml" />
-    <Content Include="Views\Admin\Index\Positions.cshtml" />
-    <Content Include="Views\Admin\Index\Roles.cshtml" />
-    <Content Include="Views\Admin\Index\Users.cshtml" />
-    <Content Include="Views\Account\EditPassword.cshtml" />
-    <Content Include="Views\Admin\Index\DocumentTypes.cshtml" />
+    <Content Include="Views\Position\CreatePosition.cshtml" />
+    <Content Include="Views\Role\CreateRole.cshtml" />
+    <Content Include="Views\DocumentTemplate\CreateTemplate.cshtml" />
+    <Content Include="Views\Position\EditPosition.cshtml" />
+    <Content Include="Views\Role\EditRole.cshtml" />
+    <Content Include="Views\DocumentTemplate\EditTemplate.cshtml" />
+    <Content Include="Views\DocumentTemplate\DocumentTemplates.cshtml" />
+    <Content Include="Views\Position\Positions.cshtml" />
+    <Content Include="Views\Role\Roles.cshtml" />
+    <Content Include="Views\User\Users.cshtml" />
+    <Content Include="Views\Manage\EditPassword.cshtml" />
+    <Content Include="Views\DocumentType\DocumentTypes.cshtml" />
     <Content Include="Views\Document\ConvertView.cshtml" />
     <Content Include="Views\Main\DocumentTemplates.cshtml" />
-    <Content Include="Views\Admin\Create\CreateDocumentType.cshtml" />
-    <Content Include="Views\Admin\Edit\EditDocumentType.cshtml" />
-    <Content Include="Views\Admin\Create\TemplatePreview.cshtml" />
-    <Content Include="Views\Admin\Preview\Preview.cshtml" />
+    <Content Include="Views\DocumentType\CreateDocumentType.cshtml" />
+    <Content Include="Views\DocumentTemplate\Preview.cshtml" />
     <Content Include="Views\Main\FillDocument.cshtml" />
-    <Content Include="Views\Admin\Edit\EditUser.cshtml" />
+    <Content Include="Views\User\EditUser.cshtml" />
+    <Content Include="Views\Main\Outbox.cshtml" />
+    <Content Include="Views\Main\Inbox.cshtml" />
+    <Content Include="Views\Shared\_GridPager.cshtml" />
+    <Content Include="Views\Shared\_Grid.cshtml" />
+    <Content Include="Grid.mvc.readme" />
+    <Content Include="Views\Main\OpenDocument.cshtml" />
+    <Content Include="Views\Main\SigningDocument.cshtml" />
+    <Content Include="Views\DocumentType\EditDocumentType.cshtml" />
+    <Content Include="Scripts\jquery-1.9.1.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -343,12 +389,17 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\DocumentView\" />
     <Folder Include="Views\Home\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BL\BL.csproj">
       <Project>{d3e9439d-ccfa-41bb-b5e8-098a45e20b4a}</Project>
       <Name>BL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DAL\DAL.csproj">
+      <Project>{e33a26cd-8c2b-4184-b9ad-96987fc81b4b}</Project>
+      <Name>DAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\Models\EntityModels.csproj">
       <Project>{820203f2-28dc-40b9-87c0-4b08ae64f3c8}</Project>
@@ -366,7 +417,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>2552</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

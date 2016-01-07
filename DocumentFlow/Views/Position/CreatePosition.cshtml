@@ -1,0 +1,24 @@
+﻿@model DocumentFlow.Models.Position
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="main-block">
+    <div class="main-blcok-wrapper">
+        <div class="header">
+            <h1>Добавление должности</h1>
+        </div>
+        <div class="new-meta">
+            @using (Html.BeginForm("CreatePosition", "Position", FormMethod.Post, new {@class = "admin-login", @id = "edit-position"}))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
+
+                <span style="width: 155px;">Название должности: </span>
+                @Html.EditorFor(model => model.Name)
+                <br>
+                <input class="button" name="submit" type="submit" value="Добавить">
+            }
+        </div>
+    </div>
+</div>

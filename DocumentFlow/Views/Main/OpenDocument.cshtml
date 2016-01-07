@@ -1,0 +1,19 @@
+﻿@model DocumentFlow.Models.DocumentView
+@{
+    ViewBag.Title = "OpenDocument";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Name</h2>
+
+<div>
+    @Html.Raw(Model.Text)
+</div>
+
+<div>
+    @Html.Raw(Model.Path)
+</div>
+<hr/>
+<div style="display: inline-block; float: right;">
+    @Html.ActionLink("Закрыть", "Outbox", "Main", null, new { @class = "btn btn-default" })
+</div>

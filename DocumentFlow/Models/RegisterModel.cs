@@ -5,9 +5,6 @@ namespace DocumentFlow.Models
     public class RegisterModel
     {
         [Required]
-        public string Login { get; set; }
-
-        [Required]
         [DataType(DataType.Text)]
         public string FirstName { get; set; }
 

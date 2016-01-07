@@ -59,10 +59,10 @@ body { font-family: 'PT Sans', sans-serif; }
     background-color: rgb(243, 243, 243);
     border-radius: 3px;
     display: inline-block;
-    padding: 40px 65px;
+    padding: 40px 70px;
 }
 
-.admin-login input[type="text"], .admin-login input[type="password"] {
+.admin-login input[type="text"], .admin-login input[type="password"], .admin-login select {
     background-color: #fff;
     border: solid 1px #ddd;
     border-radius: 3px;
@@ -166,7 +166,6 @@ nav a:hover {
 
 .main-block {
     display: inline-block;
-    height: 200px;
     width: 80%;
 }
 
@@ -560,4 +559,58 @@ textarea:focus {
     z-index: 999;
 }
 
-/*********Poup-up-block***********/
+
+.way-edit, .doc-name, .doc-pass {
+    -ms-border-radius: 5px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    padding: 20px 0px 20px 10px;
+    width: 99%;
+}
+
+/*********Validate styles***********/
+
+input {
+    border: 1px solid #cecece;
+    border-radius: 8px;
+    font-size: 13px;
+    padding: 6px 0 4px 10px;
+    width: auto;
+}
+
+input[type="text"]:focus { outline: none; }
+
+.error input[type="text"] {
+    -ms-box-shadow: inset 0 1px 1px #000000 !important;
+    -ms-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !important;
+    -webkit-box-shadow: inset 0 1px 1px #000000 !important;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !important;
+    border-color: #a94442 !important;
+    box-shadow: inset 0 1px 1px #000000 !important;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !important;
+}
+
+input.error {
+    -ms-box-shadow: inset 0 1px 1px #000000 !important;
+    -ms-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !important;
+    -webkit-box-shadow: inset 0 1px 1px #000000 !important;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !important;
+    border-color: #a94442 !important;
+    box-shadow: inset 0 1px 1px #000000 !important;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !important;
+}
+
+.error { color: red; }
+
+input.valid {
+    -ms-box-shadow: inset 0 1px 1px #000000 !important;
+    -ms-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !important;
+    -webkit-box-shadow: inset 0 1px 1px #000000 !important;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !important;
+    border-color: #3c763d !important;
+    box-shadow: inset 0 1px 1px #000000 !important;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !important;
+}
+
+label { display: block; }

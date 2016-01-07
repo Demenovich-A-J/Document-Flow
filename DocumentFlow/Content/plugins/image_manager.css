@@ -219,6 +219,8 @@ body.prevent-scroll.fr-mobile {
     width: 100%;
 }
 
+/* ReSharper disable once CssNotResolved */
+
 .fr-modal .fr-modal-wrapper div.fr-scroller div.fr-image-list div.fr-image-container::first-child { margin-top: 10px; }
 
 .fr-modal .fr-modal-wrapper div.fr-scroller div.fr-image-list div.fr-image-container + div { margin-top: 10px; }

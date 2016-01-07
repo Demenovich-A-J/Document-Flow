@@ -1,0 +1,229 @@
+﻿@model DocumentFlow.Models.DocumentTemplate
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var positions = ViewBag.Positions;
+    var types = ViewBag.Types;
+}
+
+<div class="main-block">
+    <div class="main-blcok-wrapper">
+
+        <div class="header">
+            <h1>Добавление документа</h1>
+        </div>
+
+        @using (Html.BeginForm("EditTemplate", "DocumentTemplate", FormMethod.Post, new {@id = "edit-document-template"}))
+        {
+            <div class="doc-name">
+                <h1 style="display: inline-block;">Название Шаблона: </h1>
+                @Html.EditorFor(model => model.Name)
+            </div>
+            <div class="doc-pass">
+                <h1 style="display: inline-block;">Тип Документа: </h1>
+                @Html.DropDownListFor(model => model.Type.Id, (IEnumerable<SelectListItem>) types)
+            </div>
+            <div class="way-edit">
+                <div class="selection">
+                    <select id="positionsOP">
+                        @{
+                            foreach (var position in positions)
+                            {
+                                <option>@position.Name</option>
+                            }
+                        }
+                    </select>
+                    <a class="button" href="#" onclick="addPosition()">Add</a>
+                </div>
+                <div id="way" class="way-show">
+                    <span style="font-weight: 600; width: 30px;">№</span>
+                    <span style="font-weight: 600;">Должность</span>
+                    <span style="font-weight: 600;">Действие</span>
+                </div>
+            </div>
+
+            @Html.AntiForgeryToken()
+
+            @Html.EditorFor(model => model.Text, new {htmlAttributes = new {@id = "edit", autofocus = "", name = "form"}})
+            @Html.HiddenFor(model => model.PositionsPath, new {@id = "pass"})
+
+            <a href="#" onclick="preview();" class="button" style="float: left;">Предпросмотр</a>
+            <input class="button" name="submit" type="submit" value="Добавить">
+            <br>
+        }
+    </div>
+    <div class="footer">
+        <h1>© Copyright 2015. All rights reserved by Demen_off</h1>
+    </div>
+</div>
+
+
+<!-- Include JS files. -->
+<script src="~/Content/js/froala_editor.min.js"></script>
+
+<!-- Include Plugins. -->
+<script type="text/javascript" src="~/Content/js/plugins/align.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/char_counter.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/code_view.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/colors.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/emoticons.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/entities.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/file.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/font_family.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/font_size.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/fullscreen.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/image.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/image_manager.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/inline_style.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/line_breaker.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/link.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/lists.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/paragraph_format.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/paragraph_style.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/quote.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/table.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/save.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/url.min.js"></script>
+<script type="text/javascript" src="~/Content/js/plugins/video.min.js"></script>
+<script type="text/javascript" src="~/Content/js/langs/ro.js"></script>
+
+<script>
+    var positions = {};
+    var i = 0;
+
+    $(document).ready(function() {
+
+        $(function() {
+            $.FroalaEditor.DefineIcon('my_dropdown', { NAME: 'cog' });
+            $.FroalaEditor.RegisterCommand('my_dropdown', {
+                title: 'Advanced options',
+                type: 'dropdown',
+                focus: false,
+                undo: false,
+                refreshAfterCallback: true,
+                options: {
+                    "#Текст": "Текст",
+                    "#ФИО": "ФИО",
+                    "#Дата": "Дата",
+                    "#Время": "Время",
+                    "#БольшойТекст": "Большой Текст",
+                    @{
+                        foreach (var position in positions)
+                        {
+                            @Html.Raw("\'#" + @position.Name + "\'" + ":" + "\' " + @position.Name + " \',\n")
+                        }
+                    }
+                },
+                callback: function(cmd, val) {
+                    this.html.insert(val);
+                }
+            });
+
+            $('#edit').froalaEditor({
+                tabSpaces: 5,
+                disableRightClick: true,
+                inlineMode: false,
+                theme: 'gray',
+                language: 'ru',
+                toolbarButtons: [
+                    'fullscreen', 'bold', 'italic',
+                    'underline', 'strikeThrough', 'fontFamily', 'fontSize',
+                    '|', 'color', 'paragraphStyle', '|', 'paragraphFormat',
+                    'align', 'formatOL', 'formatUL', '-', 'insertLink',
+                    'insertTable', 'undo', 'redo', 'clearFormatting',
+                    'selectAll', 'html', "|", 'formatBlock', 'my_dropdown'
+                ],
+                toolbarButtonsMD: [
+                    'fullscreen', 'bold', 'italic',
+                    'underline', 'strikeThrough', 'fontFamily', 'fontSize',
+                    '|', 'color', 'paragraphStyle', '|', 'paragraphFormat',
+                    'align', 'formatOL', 'formatUL', '-', 'insertLink',
+                    'insertTable', 'undo', 'redo', 'clearFormatting',
+                    'selectAll', 'html', "|", 'formatBlock', 'my_dropdown'
+                ],
+                toolbarButtonsSM: [
+                    'my_dropdown', 'fullscreen', 'bold', 'italic',
+                    'underline', 'strikeThrough', 'fontFamily', 'fontSize',
+                    '|', 'color', 'paragraphStyle', '|', 'paragraphFormat',
+                    'align', 'formatOL', 'formatUL', '-', 'insertLink',
+                    'insertTable', 'undo', 'redo', 'clearFormatting',
+                    'selectAll', 'html', "|", 'formatBlock', 'my_dropdown'
+                ]
+
+            });
+        });
+
+        var existPass = $("#pass").val().replace(/\s+/g, ' ').split('#');
+        var way = document.getElementById("way");
+
+        for (var i = 1; i < existPass.length; i++) {
+            positions[existPass[i].trim()] = i;
+            way.innerHTML += "<div class='new-position'>" + "<span style='width: 30px;'>" + i + "</span><span>" + existPass[i].trim() + "</span><span><a href='#' onclick='removePosition(\"" + existPass[i].trim() + "\")'>Удалить</a></span></div>";
+        }
+
+
+    });
+
+
+    function addPosition() {
+        var positionInfo = document.getElementById("positionsOP");
+        var strUser = positionInfo.options[positionInfo.selectedIndex].text;
+
+        if (positions[strUser] != null) {
+            alert(strUser + " уже есть в пути!!!");
+            return;
+        }
+
+        i++;
+        positions[strUser] = i;
+
+        var way = document.getElementById("way");
+        var pass = document.getElementById("pass");
+        pass.value += " #" + strUser + " ";
+
+        way.innerHTML += "<div class='new-position'>" + "<span style='width: 30px;'>" + i + "</span><span>" + strUser + "</span><span><a href='#' onclick='removePosition(\"" + strUser + "\")'>Удалить</a></span></div>";
+
+    };
+
+    function removePosition(name) {
+        var newQueue = 1;
+        var newPositions = {};
+        var res = "";
+        var passMass = "";
+        for (var key in positions) {
+            if (positions.hasOwnProperty(key) && key !== name) {
+                res += "<div class='new-position'>" + "<span style='width: 30px;'>" + newQueue + "</span><span>" + key + "</span><span><a href='#' onclick='removePosition(\"" + key + "\")'>Удалить</a></span></div>";
+                passMass += " #" + key + " ";
+                newPositions[key] = newQueue;
+                newQueue++;
+            }
+        }
+
+        var way = document.getElementById("way");
+        var pass = document.getElementById("pass");
+        pass.value = passMass;
+
+        if (newQueue !== 1) {
+            way.innerHTML = "<span style='width: 30px; font-weight: 600;'>№</span><span style=' font-weight: 600;'>Должность</span><span style=' font-weight: 600;'>Действие</span>" + res;
+        } else {
+            way.innerHTML = "<span style='width: 30px; font-weight: 600;'>№</span><span style=' font-weight: 600;'>Должность</span><span style=' font-weight: 600;'>Действие</span>";
+        }
+
+        i = newQueue - 1;
+
+        positions = newPositions;
+    };
+
+    function preview() {
+        $.ajax({
+            url: '@Url.Action("ConvertView")',
+            type: 'POST',
+            data: $('form').serialize(),
+            success: function(response) {
+                $(".view").html(response);
+            },
+            async: true,
+            processData: false
+        });
+    }
+</script>

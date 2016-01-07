@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DAL.Interfaces
 {
@@ -9,6 +8,7 @@ namespace DAL.Interfaces
         void Add(T item);
         void Update(T item);
         void Remove(T item);
-        IEnumerable<T> GetAll(Func<T, bool> predicate);
+        IEnumerable<T> GetAll();
+        T FindById(int id);
     }
 }

@@ -1,40 +1,36 @@
-﻿@model EntityModels.DocumentTemplate
+﻿@model DocumentFlow.Models.DocumentTemplate
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<br />
+<br/>
 
-    <form method="POST">
-        @Model.Name
-        <br />
-        <div class="fr-view">
-            @Html.Raw(Model.Text)
-            <br />
-            <input name="Id" type="text" hidden value="@Html.Raw(Model.Id.ToString())" />
-            <p>Путь</p>
-            <br />
-        </div>
-
+<form method="POST" id="fill-form">
+    <span style="display: inline-block; font-size: 20px; font-weight: bold; line-height: 1.1em;">Название документа</span>
+    <input class="form-control required" style="display: inline-block; width: auto;" type="text" name="DocName"/>
+    @Html.HiddenFor(model => model.Id, new {@Name = "Id"})
+    <hr/>
+    <h2>@Model.Name</h2>
+    <div class="fr-view">
+        @Html.Raw(Model.Text)
+    </div>
+    <hr/>
+    <div class="form-group">
+        <h2>Заполните путь документа</h2>
+        <div class="form-inline">
             @Html.Raw(Model.PositionsPath)
-
-            <a id="send" href="#">Send</a>
+        </div>
+    </div>
+    <hr/>
+    <a id="send" class="btn btn-success" style="float: right !important;" href="#">Отправить</a>
 </form>
-    <script>
-        $('#send').click(function () {
-            var a = $('form').serializeArray();
 
-            for (var i = 0; i < a.length; i++) {
-                result[a[i]["name"].toString()] = a[i]["value"].toString();
-            }
-            $.ajax({
-                url: '@Url.Action("GetResult")' + '/action?json=' + JSON.stringify(result),
-                type: 'POST',
-                success: function (response) {
-                    $(".view").html(response);
-                },
-                async: true,
-                processData: false
-            });
-        });
-    </script>
+<script>
+    $('#send').click(function() {
+        $("#fill-form").valid();
+        if ($("#fill-form").valid()) {
+            $('#send').removeAttr('href');
+            $('#send').attr('href', '@Url.Action("SendDocument", "Main")' + '?json=' + JSON.stringify($('form').serializeArray()));
+        }
+    });
+</script>

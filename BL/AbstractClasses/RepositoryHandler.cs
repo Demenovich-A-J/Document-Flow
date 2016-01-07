@@ -1,44 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
 using BL.Interfaces;
-using DAL.AbstractRepository;
+using DAL.Interfaces;
 
 namespace BL.AbstractClasses
 {
-    public abstract class RepositoryHandler<T> : IRepositoryHandler<T>
+    public abstract class RepositoryHandler<T, K> : IRepositoryHandler<T>
         where T : class
+        where K : class
     {
-        protected DataRepository<T> _repository;
+        protected readonly IDataRepository<K> _repository;
 
-        public RepositoryHandler(DataRepository<T> repository)
+        public RepositoryHandler(IDataRepository<K> repository)
         {
             _repository = repository;
         }
 
         public void Add(T item)
         {
-            _repository.Add(item);
+            _repository.Add(ConvertToDalModel(item));
         }
 
         public void Update(T item)
         {
-            _repository.Update(item);
+            _repository.Update(ConvertToDalModel(item));
         }
 
         public void Remove(T item)
         {
-            _repository.Remove(item);
+            _repository.Remove(ConvertToDalModel(item));
         }
 
-        public IEnumerable<T> GetAll(Func<T, bool> predicate)
+        public IEnumerable<T> GetAll()
         {
-            return _repository.GetAll(predicate);
+            return _repository.GetAll().Select(ConvertToModel).ToList();
         }
 
-        public async Task<T> FindById(int id)
+        public T FindById(int id)
         {
-            return await _repository.FindById(id);
+            var item = _repository.FindById(id);
+            return ConvertToModel(item);
         }
+
+        protected abstract T ConvertToModel(K item);
+        protected abstract K ConvertToDalModel(T item);
     }
 }

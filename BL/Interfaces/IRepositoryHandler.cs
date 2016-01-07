@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BL.Interfaces
 {
@@ -10,8 +8,8 @@ namespace BL.Interfaces
         void Add(T item);
         void Update(T item);
         void Remove(T item);
-        Task<T> FindById(int id);
+        T FindById(int id);
 
-        IEnumerable<T> GetAll(Func<T, bool> predicate);
+        IEnumerable<T> GetAll();
     }
 }

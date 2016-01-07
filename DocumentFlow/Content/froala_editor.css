@@ -998,6 +998,7 @@ iframe.fr-iframe {
     position: -moz-sticky;
     position: -ms-sticky;
     position: -o-sticky;
+    /* ReSharper disable once InvalidValue */
     position: sticky;
 }
 

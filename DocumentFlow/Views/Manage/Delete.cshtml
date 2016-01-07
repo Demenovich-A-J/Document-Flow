@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Delete";
+}
+
+<div class="b-popup">
+    <form class="b-popup-content">
+        <h2>Вы уверены, что хотите удалить свой аккаунт?</h2>
+        <div class="btn-group">
+            @Html.ActionLink("Да", "DeleteConfirmed", "Account", new {@class = "btn btn-primary"})
+            <a href="/Main/Inbox" class="btn btn-primary">Нет</a>
+        </div>
+    </form>
+</div>

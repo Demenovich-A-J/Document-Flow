@@ -5,7 +5,7 @@ namespace DocumentFlow.Models
     public class LoginModel
     {
         [Required]
-        public string Login { get; set; }
+        public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

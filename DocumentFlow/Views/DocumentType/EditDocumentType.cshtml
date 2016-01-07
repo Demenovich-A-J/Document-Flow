@@ -1,0 +1,28 @@
+﻿@model DocumentFlow.Models.DocumentType
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="main-block">
+    <div class="main-blcok-wrapper">
+        <div class="header">
+            <h1>Редактирование типа документа</h1>
+        </div>
+        <div class="new-meta">
+            <div class="edit">
+
+                @using (Html.BeginForm("EditDocumentType", "DocumentType", FormMethod.Post, new {@class = "admin-login", @id = "edit-document-type"}))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary()
+                    @Html.HiddenFor(model => model.Id)
+                    <span>Название: </span>
+                    @Html.EditorFor(model => model.Name)
+                    <input class="button" type="submit" value="Изменить"/>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

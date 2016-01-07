@@ -1,19 +1,27 @@
-﻿using System.Threading.Tasks;
+﻿using AutoMapper;
 using DAL.AbstractRepository;
-using EntityModels;
+using DAL.Models;
+using Database = EntityModels.Entities;
+using System.Linq;
 
 namespace DAL.Repositories
 {
-    public class PositionsRepository : DataRepository<Position>
+    public class PositionsRepository : DataRepository<Position, EntityModels.Position>
     {
-        public override async Task<Position> FindById(int id)
+        public PositionsRepository()
         {
-            Position position;
-            using (var context = new Database())
-            {
-                position = await context.Positions.FindAsync(id);
-            }
-            return position;
+            Mapper.CreateMap<EntityModels.Position, Position>();
+            Mapper.CreateMap<Position, EntityModels.Position>();
+        }
+
+        protected override Position ConvertToModel(EntityModels.Position item)
+        {
+            return Mapper.Map<EntityModels.Position, Position>(item);
+        }
+
+        protected override EntityModels.Position ConvertToEntity(Position item)
+        {
+            return Mapper.Map<Position, EntityModels.Position>(item);
         }
     }
 }

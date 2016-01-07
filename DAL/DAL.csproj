@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.4.1.1\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -49,14 +52,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractRepository\DataRepository.cs" />
+    <Compile Include="DataBaseConfigurator\DataBaseConfig.cs" />
     <Compile Include="Interfaces\IDataRepository.cs" />
+    <Compile Include="Models\CurrentStep.cs" />
+    <Compile Include="Models\Document.cs" />
+    <Compile Include="Models\DocumentTemplate.cs" />
+    <Compile Include="Models\DocumentType.cs" />
+    <Compile Include="Models\Position.cs" />
+    <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\Step.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\DocumentPathsRepository.cs" />
+    <Compile Include="Repositories\CurrentStepsRepository.cs" />
     <Compile Include="Repositories\DocumentsRepository.cs" />
     <Compile Include="Repositories\DocumentTemplatesRepository.cs" />
     <Compile Include="Repositories\DocumentTypesRepository.cs" />
     <Compile Include="Repositories\PositionsRepository.cs" />
     <Compile Include="Repositories\RolesRepository.cs" />
+    <Compile Include="Repositories\StepsRepository.cs" />
     <Compile Include="Repositories\UsersRepository.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +82,7 @@
       <Name>EntityModels</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

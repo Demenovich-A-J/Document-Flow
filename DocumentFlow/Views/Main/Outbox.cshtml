@@ -1,0 +1,58 @@
+﻿@using DocumentFlow.Models
+@using GridMvc.Html
+@model IEnumerable<DocumentFlow.Models.Document>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script src="~/Scripts/bootstrap-datepicker.js"></script>
+<link href="~/Content/gridmvc.datepicker.css" rel="stylesheet" type="text/css" />
+
+@helper StatuHelperResult(Document document)
+{
+    switch (document.Status)
+    {
+        case true:
+            <span>Подписан</span>
+            break;
+        case false:
+        <span>Отклонен</span>
+            break;
+        default:
+        <span>Не подписан</span>
+            break;
+    }
+}
+
+@helper ActionHelperResult(Document document)
+{
+    <div class="btn-group">
+        @Html.ActionLink("Просмотр", "OpenDocument", "Main", new { document.Id }, new { @class = "btn btn-success" })
+        @Html.ActionLink("Удалить", "DeleteDocument", "Main", new { document.Id }, new { @class = "btn btn-danger" })
+    </div>
+}
+
+<h2>Исходящие</h2>
+</br>
+
+@Html.Grid(Model).Named("grid").Columns(columns =>
+    {
+        columns.Add(c => c.DateTime).Titled("Дата создания").Filterable(true);
+        columns.Add(c => c.Name).Titled("Название документа").Filterable(true);
+        columns.Add()
+        .Titled("Тип документа")
+        .Encoded(false)
+        .Sanitized(false)
+        .RenderValueAs(o => o.Type == null ? "" : o.Type.Name);
+        columns.Add()
+            .Titled("Статус")
+            .Encoded(false)
+            .Sanitized(false)
+            .RenderValueAs(o => StatuHelperResult(o));
+        columns.Add()
+            .Titled("Действие")
+            .Encoded(false)
+            .Sanitized(false)
+            .RenderValueAs(o => ActionHelperResult(o));
+    }).Sortable(true)

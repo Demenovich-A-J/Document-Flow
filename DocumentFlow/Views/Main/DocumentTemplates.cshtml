@@ -1,39 +1,30 @@
-﻿@model IEnumerable<EntityModels.DocumentTemplate>
+﻿@using DocumentFlow.Models
+@using GridMvc.Html
+@model IEnumerable<DocumentFlow.Models.DocumentTemplate>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="panel panel-success">
-    <div class="panel-heading">
-        <h3 class="panel-title">Panel title</h3>
-    </div>
 
-    <div class="panel-body">
-        <div class="table-responsive" style="width: 80%; margin: 0 auto;">
-            <table class="table table-bordered">
-                @if (Model != null && Model.Count() != 0)
-                {
-                    <thead>
-                        <tr>
-                            <th>Название</th>
-                            <th>Действие</th>
-                        </tr>
-                    </thead>
-                    foreach (var item in Model)
-                    {
-                        <tbody>
-                            <tr>
-                                <td>@item.Name</td>
-                                <td>@Html.ActionLink("Заполнить", "FillDocument", "Main", new { item.Id }, null)</td>
-                            </tr>
-                        </tbody>
-                    }
-                }
-                else
-                {
-                    <tr>список пуст</tr>
-                }
-            </table>
-        </div>
-    </div>
-</div>
+@helper ActionHelperResult(DocumentTemplate document)
+{
+    @Html.ActionLink("Заполнить", "FillDocument", "Main", new { document.Id }, new { @class = "btn btn-success" })
+}
+
+<h2>Шаблоны</h2>
+</br>
+
+@Html.Grid(Model).Named("grid").Columns(columns =>
+{
+    columns.Add(c => c.Name).Titled("Название документа").Filterable(true);
+    columns.Add()
+        .Titled("Тип документа")
+        .Encoded(false)
+        .Sanitized(false)
+        .RenderValueAs(o => o.Type == null ? "" : o.Type.Name);
+    columns.Add()
+        .Titled("Действие")
+        .Encoded(false)
+        .Sanitized(false)
+        .RenderValueAs(o => ActionHelperResult(o));
+}).Sortable(true)

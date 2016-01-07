@@ -9,6 +9,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href="~/Content/styles.css" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,700" rel="stylesheet" type="text/css">
+    <script src="//code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+    <script src="~/Scripts/validate.config.js"></script>
     <title>Регистрация</title>
 </head>
 <body class="reg-html">
@@ -17,16 +20,12 @@
         <h1>Регистрация</h1>
     </div>
     <div class="reg-form">
-        @using (Html.BeginForm())
+        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new {@id = "reg-form"}))
         {
             @Html.AntiForgeryToken()
             {
                 @Html.ValidationSummary(false)
                 {
-                    <span>Логин:</span>
-                    @Html.EditorFor(model => model.Login)
-                    <br>
-
                     <span>Имя:</span>
                     @Html.EditorFor(model => model.FirstName)
                     <br>
@@ -45,15 +44,14 @@
 
                     <span>Должность:</span>
                     @Html.DropDownListFor(model => model.PositionId, positions)
-                    ;
                     <br>
 
                     <span>Пароль:</span>
-                    @Html.EditorFor(model => model.Password)
+                    @Html.EditorFor(model => model.Password, new {@id = "password"})
                     <br>
 
                     <span>Подтвердить пароль:</span>
-                    @Html.EditorFor(model => model.PasswordConfirm)
+                    @Html.EditorFor(model => model.PasswordConfirm, new {@id = "confirm_password"})
                     <br>
                 }
             }

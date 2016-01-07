@@ -1,0 +1,31 @@
+﻿@model DocumentFlow.Models.DocumentTemplate
+
+@{
+    Layout = null;
+}
+@if (Model != null)
+{
+    <div class="b-popup">
+        <div class="b-popup-content">
+            <div style="margin-bottom: 20px;" class="fr-view">
+                @Html.Raw(Model.Text)
+            </div>
+            <button class="button" id="close">Закрыть</button>
+        </div>
+    </div>
+}
+else
+{
+    <div class="b-popup">
+        <div class="b-popup-content">
+            <h1>Нет данных</h1>
+            <button class="button" id="close">Закрыть</button>
+        </div>
+    </div>
+}
+
+<script>
+    $("#close").click(function() {
+        $(".b-popup").hide();
+    });
+</script>

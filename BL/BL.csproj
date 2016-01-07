@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.4.1.1\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -45,31 +48,45 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractClasses\RepositoryHandler.cs" />
-    <Compile Include="DocumentHandlers\DocumentsRepositoryHandler.cs" />
-    <Compile Include="DocumentHandlers\HtmlDocumentHandler.cs" />
-    <Compile Include="DocumentPathsHandler\DocumentPathRepositoryHandler.cs" />
-    <Compile Include="DocumentTemplatesHandlers\DocumentTemplatesRepositoryHandler.cs" />
-    <Compile Include="DocumentTypeHandlers\DocumentTypesHandler.cs" />
-    <Compile Include="DocumentTypeHandlers\DocumentTypesRepositoryHandler.cs" />
+    <Compile Include="DataConfigurator\ConfigData.cs" />
+    <Compile Include="Handlers\CurrentStepsHandlers\CurrentStepsRepositoryHandler.cs" />
+    <Compile Include="DinamicJsonHelper\DynamicJsonConverter.cs" />
+    <Compile Include="Handlers\DocumentHandlers\DocumentCreationHandler.cs" />
+    <Compile Include="Handlers\DocumentHandlers\DocumentsRepositoryHandler.cs" />
+    <Compile Include="Handlers\DocumentHandlers\DocumentViewCreator.cs" />
+    <Compile Include="Handlers\DocumentHandlers\HtmlDocumentHandler.cs" />
+    <Compile Include="Handlers\DocumentTemplatesHandlers\DocumentTemplatesRepositoryHandler.cs" />
+    <Compile Include="Handlers\DocumentTypeHandlers\DocumentTypesHandler.cs" />
+    <Compile Include="Handlers\DocumentTypeHandlers\DocumentTypesRepositoryHandler.cs" />
     <Compile Include="Interfaces\IRepositoryHandler.cs" />
-    <Compile Include="PositionsHandlers\PositionsHandler.cs" />
-    <Compile Include="PositionsHandlers\PositionsReposiotryHandler.cs" />
+    <Compile Include="Handlers\PositionsHandlers\PositionsHandler.cs" />
+    <Compile Include="Handlers\PositionsHandlers\PositionsReposiotryHandler.cs" />
+    <Compile Include="Models\CurrentStep.cs" />
+    <Compile Include="Models\Document.cs" />
+    <Compile Include="Models\DocumentTemplate.cs" />
+    <Compile Include="Models\DocumentType.cs" />
+    <Compile Include="Models\DocumentView.cs" />
+    <Compile Include="Models\Position.cs" />
+    <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\Step.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RolesHandlers\RolesHandler.cs" />
-    <Compile Include="RolesHandlers\RolesRepositoryHandler.cs" />
-    <Compile Include="UsersHandlers\UsersRepositoryHandler.cs" />
+    <Compile Include="Handlers\RolesHandlers\RolesHandler.cs" />
+    <Compile Include="Handlers\RolesHandlers\RolesRepositoryHandler.cs" />
+    <Compile Include="Handlers\StepsHandlers\SigningHandler.cs" />
+    <Compile Include="Handlers\StepsHandlers\StepsRepositoryHandler.cs" />
+    <Compile Include="Handlers\UsersDocumentsHandler\UsersDocumentsHandler.cs" />
+    <Compile Include="Handlers\UsersHandlers\UsersRepositoryHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DAL\DAL.csproj">
       <Project>{e33a26cd-8c2b-4184-b9ad-96987fc81b4b}</Project>
       <Name>DAL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Models\EntityModels.csproj">
-      <Project>{820203f2-28dc-40b9-87c0-4b08ae64f3c8}</Project>
-      <Name>EntityModels</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

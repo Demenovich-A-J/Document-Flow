@@ -1,0 +1,29 @@
+﻿@model DocumentFlow.Models.Role
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="main-block">
+    <div class="main-blcok-wrapper">
+        <div class="header">
+            <h1>Редактирование роли</h1>
+        </div>
+        <div class="new-meta">
+            <div class="edit">
+                @using (Html.BeginForm("EditRole", "Role", FormMethod.Post, new {@class = "admin-login", @id = "edit-role"}))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div>
+                        @Html.ValidationSummary()
+                        @Html.HiddenFor(model => model.Id)
+                        <span>Название: </span>@Html.EditorFor(model => model.Name)
+                        <span>Описание: </span>@Html.EditorFor(model => model.Description)
+                        <input class="button" type="submit" value="Изменить"/>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

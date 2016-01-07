@@ -1,5 +1,4 @@
-﻿@using DocumentFlow.Controllers
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -7,11 +6,15 @@
     <link href="~/Content/styles.css" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,700" rel="stylesheet" type="text/css">
     <link href="~/Content/froala_style.min.css" rel="stylesheet" type="text/css"/>
-    <link href="~/Content/froala_style.min.css" rel="stylesheet" type="text/css"/>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <script src="~/Scripts/gridmvc.min.js"></script>
+    <link href="~/Content/Gridmvc.css" rel="stylesheet"/>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-1.9.1.js"></script>
+    <script src="~/Scripts/bootstrap-datepicker.js"></script>
+    <link href="~/Content/gridmvc.datepicker.css" rel="stylesheet" type="text/css" />
+
     <title>Главная</title>
 </head>
 <body>
@@ -19,25 +22,34 @@
     <div class="left-sidebar">
         <ul class="menu">
             <li class="menu-item">
-                <h1>@AccountController.FullName</h1>
+                <h1>@ViewBag.FullName</h1>
                 <ul class="submenu">
-                    <li class="submenu-item">@Html.ActionLink("Редактировать", "Edit", "Account")</li>
-                    <li class="submenu-item">@Html.ActionLink("Изменить пароль", "EditPassword", "Account")</li>
-                    <li class="submenu-item">@Html.ActionLink("Удалить", "Delete", "Account")</li>
+                    <li class="submenu-item">@Html.ActionLink("Редактировать", "Edit", "Manage")</li>
+                    <li class="submenu-item">@Html.ActionLink("Изменить пароль", "EditPassword", "Manage")</li>
+                    <li class="submenu-item">@Html.ActionLink("Удалить", "Delete", "Manage")</li>
                     <li class="submenu-item">@Html.ActionLink("Выйти", "Logoff", "Account")</li>
                 </ul>
             </li>
         </ul>
         <nav>
-            @Html.ActionLink("Входящие", "")
-            @Html.ActionLink("Исходящие", "")
+            @Html.ActionLink("Входящие", "Inbox", "Main")
+            @Html.ActionLink("Исходящие", "Outbox", "Main")
             @Html.ActionLink("Заполнить", "DocumentTemplates", "Main")
+            @if (HttpContext.Current.Request.Cookies["Role"].Value == "Admin")
+            {
+                @Html.ActionLink("Панель администратора", "Roles", "Role")
+            }
         </nav>
+        <div class="logo">OneStepDoc</div>
     </div>
     <div class="main-block">
-        
-        @RenderBody()
+        <div class="main-blcok-wrapper">
+            @RenderBody()
+        </div>
     </div>
+
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+    <script src="~/Scripts/validate.config.js"></script>
 </div>
 </body>
 </html>

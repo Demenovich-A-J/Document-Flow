@@ -48,22 +48,72 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Document.cs" />
-    <Compile Include="DocumentPath.cs" />
-    <Compile Include="DocumentTemplate.cs" />
-    <Compile Include="DocumentType.cs" />
-    <Compile Include="Models.Context.cs" />
-    <Compile Include="Position.cs" />
+    <Compile Include="CurrentStep.cs">
+      <DependentUpon>EntityModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Document.cs">
+      <DependentUpon>EntityModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentTemplate.cs">
+      <DependentUpon>EntityModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentType.cs">
+      <DependentUpon>EntityModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityModels.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityModels.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Position.cs">
+      <DependentUpon>EntityModels.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Role.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="Role.cs">
+      <DependentUpon>EntityModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Step.cs">
+      <DependentUpon>EntityModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="User.cs">
+      <DependentUpon>EntityModels.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
+    <EntityDeploy Include="EntityModels.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>EntityModels.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="EntityModels.edmx.diagram">
+      <DependentUpon>EntityModels.edmx</DependentUpon>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="EntityModels.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EntityModels.edmx</DependentUpon>
+      <LastGenOutput>EntityModels.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="EntityModels.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EntityModels.edmx</DependentUpon>
+      <LastGenOutput>EntityModels.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,0 +1,39 @@
+﻿@model DocumentFlow.Models.EditUserModel
+
+@{
+    ViewBag.Title = "DocumentFlow_Edit";
+    IEnumerable<SelectListItem> positions = ViewBag.Positions;
+}
+
+<h2>Редактирование пользователя</h2>
+
+<div class="reg-form">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        {
+            @Html.ValidationSummary(false)
+            {
+                <span>Логин:</span>
+                @Html.EditorFor(model => model.Login)
+                <br>
+                <span>Имя:</span>
+                @Html.EditorFor(model => model.FirstName)
+                <br>
+                <span>Фамилия:</span>
+                @Html.EditorFor(model => model.LastName)
+                <br>
+                <span>Отчество:</span>
+                @Html.EditorFor(model => model.Patronymic)
+                <br>
+                <span>Почта:</span>
+                @Html.EditorFor(model => model.Email)
+                <br>
+                <span>Должность:</span>
+                @Html.DropDownListFor(model => model.PositionId, positions)
+            }
+        }
+        <br/>
+        <input type="submit" class="button" value="Изменить"/>
+    }
+</div>

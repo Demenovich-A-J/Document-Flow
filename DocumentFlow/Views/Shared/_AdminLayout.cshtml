@@ -22,21 +22,30 @@
     <link rel="stylesheet" href="~/Content/plugins/video.css">
     <link href="~/Content/froala_editor.min.css" rel="stylesheet" type="text/css"/>
     <link href="~/Content/froala_style.min.css" rel="stylesheet" type="text/css"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+
 </head>
 <body>
 <div class="view"></div>
 <div class="left-menu">
     <div class="menu-wrapper">
         <nav>
-            @Html.ActionLink("Шаблоны документов", "DocumentTemplates", "Admin")
-            @Html.ActionLink("Типы документов", "DocumentTypes", "Admin")
-            @Html.ActionLink("Роли", "Roles", "Admin")
-            @Html.ActionLink("Должности", "Positions", "Admin")
-            @Html.ActionLink("Пользователи", "Users", "Admin")
-            @Html.ActionLink("Выйти", "LogOff", "Account")
-        </nav>
+            <div class="btn-group-vertical">
+                @Html.ActionLink("Шаблоны документов", "DocumentTemplates", "DocumentTemplate")
+                @Html.ActionLink("Типы документов", "DocumentTypes", "DocumentType")
+                @Html.ActionLink("Роли", "Roles", "Role")
+                @Html.ActionLink("Должности", "Positions", "Position")
+                @Html.ActionLink("Пользователи", "Users", "User")
+                @Html.ActionLink("Режим пользователя", "Index", "Main")
+                @Html.ActionLink("Выйти", "LogOff", "Account")
+                </div>
+</nav>
     </div>
 </div>
 @RenderBody()
+
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+<script src="~/Scripts/validate.config.js"></script>
 </body>
 </html>

@@ -1,0 +1,41 @@
+﻿@model DocumentFlow.Models.User
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    List<SelectListItem> positions = ViewBag.Positions;
+    List<SelectListItem> roles = ViewBag.Roles;
+}
+
+<div class="main-block">
+    <div class="header">
+        <h1>Редактирование пользователя</h1>
+    </div>
+    <div class="new-meta">
+        <div class="edit">
+            @using (Html.BeginForm("EditUser", "User", FormMethod.Post, new {@class = "admin-login", id = "#reg-form"}))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.ValidationSummary()
+                @Html.HiddenFor(model => model.Id)
+                <span>Логин:</span>
+                @Html.TextBoxFor(model => model.UserName)
+                <span>Имя: </span>
+                @Html.EditorFor(model => model.FirstName)
+                <span>Фамилия: </span>
+                @Html.EditorFor(model => model.LastName)
+                <span>Отчество: </span>
+                @Html.EditorFor(model => model.Patronymic)
+                <span>Должность: </span>
+                @Html.DropDownListFor(model => model.Position.Id, positions)
+                <span>Email: </span>
+                @Html.TextBoxFor(model => model.Email)
+                <span>Пароль: </span>
+                @Html.EditorFor(model => model.Password)
+                <span>Роль: </span>
+                @Html.DropDownListFor(model => model.Role.Id, roles)
+                <br/>
+                <input class="button" type="submit" value="Изменить"/>
+            }
+        </div>
+    </div>
+</div>
